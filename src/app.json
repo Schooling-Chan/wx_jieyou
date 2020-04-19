@@ -1,0 +1,56 @@
+{
+    "pages": [
+        "pages/index/main",
+        "pages/menu/main",
+        "pages/center/main",
+        "pages/logs/main",
+        "pages/counter/main"
+    ],
+    "window": {
+        "backgroundTextStyle": "dark",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "为你解忧",
+        "navigationBarTextStyle": "black"
+    },
+    "tabBar": {
+        "color": "#999",
+        "backgroundColor": "#fafafa",
+        "selectedColor": "#69C8BB",
+        "borderStyle": "black",
+
+        "list": [{
+            "text": "首页",
+            "pagePath": "pages/index/main",
+            "iconPath": "static/tabs/home.png",
+            "selectedIconPath": "static/tabs/home-active.png"
+        }, {
+            "text": "菜单",
+            "pagePath": "pages/menu/main",
+            "iconPath": "static/tabs/menu.png",
+            "selectedIconPath": "static/tabs/menu-active.png"
+        }, {
+            "text": "个人中心",
+            "pagePath": "pages/center/main",
+            "iconPath": "static/tabs/center.png",
+            "selectedIconPath": "static/tabs/center-active.png"
+        }],
+
+        "items": [{
+            "name": "首页",
+            "pagePath": "pages/index/main",
+            "icon": "static/tabs/home.png",
+            "activeIcon": "static/tabs/home-active.png"
+        }, {
+            "text": "菜单",
+            "pagePath": "pages/menu/main",
+            "iconPath": "static/tabs/menu.png",
+            "activeIcon": "static/tabs/menu-active.png"
+        }, {
+            "text": "个人中心",
+            "pagePath": "pages/center/main",
+            "iconPath": "static/tabs/center.png",
+            "activeIcon": "static/tabs/center-active.png"
+        }],
+        "position": "bottom"
+    }
+}

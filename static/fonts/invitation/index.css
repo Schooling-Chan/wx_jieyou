@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'iconfont';
+    /* project id 1764620 */
+    src: url('//at.alicdn.com/t/font_1764620_sax3yxexe.eot');
+    src: url('//at.alicdn.com/t/font_1764620_sax3yxexe.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1764620_sax3yxexe.woff2') format('woff2'), url('//at.alicdn.com/t/font_1764620_sax3yxexe.woff') format('woff'), url('//at.alicdn.com/t/font_1764620_sax3yxexe.ttf') format('truetype'), url('//at.alicdn.com/t/font_1764620_sax3yxexe.svg#iconfont') format('svg');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    /* font-size: 30rpx; */
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: rgba(96, 96, 96, 0.8);
+    position: absolute;
+    right: 30%;
+    bottom: 5%;
+}
+
+.icong:before {
+    content: "\e609";
+    font-size: 50rpx;
+    position: absolute;
+    left: -75%;
+    top: -32%;
+}
+
+.iconc:before {
+    content: "\e625";
+    font-size: 50rpx;
+    position: absolute;
+    left: -162%;
+    top: -14%;
+}
+
+.icond:before {
+    content: "\e60c";
+    font-size: 40rpx;
+    position: absolute;
+    left: -132%;
+    top: -9%;
+}
