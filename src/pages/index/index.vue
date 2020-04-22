@@ -5,23 +5,27 @@
       <div class="judge">
         <img src="../../../static/images/machine.png" alt="">
         <div class="judge-text">
-          <div>智能问诊</div>
-          <span>答题预诊当前情况</span>
+          <div>心理评测</div>
+          <span>答题预测当前情况</span>
         </div>
       </div>
       <div class="doctor">
-        <img src="../../../static/images/doctor.png" alt="">
+        <img src="../../../static/images/volunteer.png" alt="">
         <div class="doctor-text">
-          <div>咨询专家</div>
-          <span>精神科门诊专家</span>
+          <div>成为暖心师</div>
+          <span>帮助别人也是帮助自己</span>
         </div>
       </div>
     </div>
 
     <!-- 每日一记 -->
     <div class="noteBox">
-      <div class="title"><div class="title-text">打卡</div></div>
+      <div class="title"><div class="title-text">每日打卡</div></div>
       <div class="content">
+        <div class="medical">
+          <div class="comment-pic"><img src="../../../static/images/heart.png" alt=""></div>
+          <span>心情打卡</span>
+        </div>
         <div class="medical">
           <div class="comment-pic"><img src="../../../static/images/kitmedical.png" alt=""></div>
           <span>用药记录</span>
@@ -37,61 +41,261 @@
       </div>
     </div>
 
-    <!-- 热门帖子 -->
-    <div class="invitationBox">
-      <div class="title"><div class="title-text">热门动态</div></div>
-      <div class="invitation">
-        <div class="invitation-persons">
-          <div class="invitation-persons-head">
-            <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-            <span>心猿意马</span>
-            <div class="time">2020-01-02 18:00:00 </div>
-            <!-- <div class="iconfont icong">1110</div> -->
-          </div>
-          <div class="invitation-persons-content">
-            <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-            <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-            目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-            学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-            加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-            </div>
-          </div>
-          <div class="footer">
-            <div class="give iconfont icond">55</div>
-            <div class="comment iconfont iconc">55</div>
-          </div>
-        </div>
-        <div class="invitation-persons">
-          <div class="invitation-persons-head">
-            <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-            <span>心猿意马</span>
-            <div class="time">2020-01-02 18:00:00</div>
-          </div>
-          <div class="invitation-persons-content">
-            <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-            <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业
-            </div>
-          </div>
-          <div class="footer">
-            <div class="give iconfont icond">55</div>
-            <div class="comment iconfont iconc">55</div>
-          </div>
-        </div>
+    <!-- 情绪统计 -->
+    <div class="emotionBox">
+      <div class="title"><div class="title-text">情绪统计</div></div>
+      <div class="mp-echarts">
+       <mpvue-echarts :echarts="echarts" :onInit="initChart"/>
+      </div>
+      <div class="mp-echarts twos" >
+       <mpvue-echarts :echarts="echarts" :onInit="ecBarInit" canvasId="bar" />
+      </div>
+      <div class="mp-echarts">
+        <mpvue-echarts :echarts="echarts" :onInit="ecScatterInit" canvasId="scatter" />
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import * as echarts from 'echarts/dist/echarts.simple.min'
+import mpvueEcharts from 'mpvue-echarts'
 
+function initChart (canvas, width, height) {
+  const chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  })
+  canvas.setChart(chart)
+  var option = {
+    backgroundColor: '#fff',
+    color: ['#37A2DA', '#67E0E3'],
+   
+    legend: {
+      data: ['A', 'B']
+    },
+    grid: {
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    },
+    yAxis: {
+      x: 'center',
+      type: 'value',
+      splitLine: {
+        lineStyle: {
+          type: 'dashed'
+        }
+      }
+    },
+    series: [{
+      name: 'A',
+      type: 'line',
+      smooth: true,
+      data: [18, 36, 65, 30, 78, 40, 33]
+    }, {
+      name: 'B',
+      type: 'line',
+      smooth: true,
+      data: [12, 50, 51, 35, 70, 30, 20]
+    }]
+  }
+  chart.setOption(option)
+  return chart
+}
 
+let barChart, scatterChart;
+function getBarOption () {
+  return {
+    backgroundColor: '#fff',
+    color: ['#37a2da', '#32c5e9', '#67e0e3'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { // 坐标轴指示器，坐标轴触发有效
+        type: 'line' // 默认为直线，可选为：'line' | 'shadow'
+      }
+    },
+    legend: {
+      data: ['热度', '正面', '负面']
+    },
+    grid: {
+      left: 20,
+      right: 20,
+      bottom: 15,
+      top: 40,
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            color: '#999'
+          }
+        },
+        axisLabel: {
+          color: '#666'
+        }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'category',
+        axisTick: { show: false },
+        data: ['汽车之家', '今日头条', '百度贴吧', '一点资讯', '微信', '微博', '知乎'],
+        axisLine: {
+          lineStyle: {
+            color: '#999'
+          }
+        },
+        axisLabel: {
+          color: '#666'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '热度',
+        type: 'bar',
+        label: {
+          normal: {
+            show: true,
+            position: 'inside'
+          }
+        },
+        data: [300, 270, 340, 344, 300, 320, 310]
+      },
+      {
+        name: '正面',
+        type: 'bar',
+        stack: '总量',
+        label: {
+          normal: {
+            show: true
+          }
+        },
+        data: [120, 102, 141, 174, 190, 250, 220]
+      },
+      {
+        name: '负面',
+        type: 'bar',
+        stack: '总量',
+        label: {
+          normal: {
+            show: true,
+            position: 'left'
+          }
+        },
+        data: [-20, -32, -21, -34, -90, -130, -110]
+      }
+    ]
+  }
+}
+function getScatterOption () {
+  var data1 = []
+  var data2 = []
+  for (var i = 0; i < 10; i++) {
+    data1.push(
+      [
+        Math.round(Math.random() * 100),
+        Math.round(Math.random() * 100),
+        Math.round(Math.random() * 40)
+      ]
+    )
+    data2.push(
+      [
+        Math.round(Math.random() * 100),
+        Math.round(Math.random() * 100),
+        Math.round(Math.random() * 100)
+      ]
+    )
+  }
+  var axisCommon = {
+    axisLabel: {
+      textStyle: {
+        color: '#C8C8C8'
+      }
+    },
+    axisTick: {
+      lineStyle: {
+        color: '#fff'
+      }
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#C8C8C8'
+      }
+    },
+    splitLine: {
+      lineStyle: {
+        color: '#C8C8C8',
+        type: 'solid'
+      }
+    }
+  }
+  return {
+    color: ['#FF7070', '#60B6E3'],
+    backgroundColor: '#fff',
+    xAxis: axisCommon,
+    yAxis: axisCommon,
+    legend: {
+      data: ['aaaa', 'bbbb']
+    },
+    visualMap: {
+      show: false,
+      max: 100,
+      inRange: {
+        symbolSize: [20, 70]
+      }
+    },
+    series: [{
+      type: 'line',
+      name: 'aaaa',
+      data: data1
+    },
+    {
+      name: 'bbbb',
+      type: 'line',
+      data: data2
+    }
+    ],
+  }
+}
 export default {
-  
+  data () {
+    return {
+      echarts,
+      initChart,
+      ecBarInit: function (canvas, width, height) {
+        barChart = echarts.init(canvas, null, {
+          width: width,
+          height: height
+        });
+        canvas.setChart(barChart);
+        barChart.setOption(getBarOption());
+        return barChart
+      },
+      ecScatterInit: function (canvas, width, height) {
+        scatterChart = echarts.init(canvas, null, {
+          width: width,
+          height: height
+        })
+        canvas.setChart(scatterChart)
+        scatterChart.setOption(getScatterOption())
+        return scatterChart
+      }
+    }
+  },
+  components: {
+    mpvueEcharts
+  },
+  onShareAppMessage () {}
 }
 </script>
 
 <style scoped lang="scss">
-@import url('../../../static/fonts/invitation/index.css');
 $bg:#f0f0f0;
 .mainBox{
   background: $bg;
@@ -271,89 +475,13 @@ $bg:#f0f0f0;
   }
 }
 
-//invitationBox
-.invitationBox{
-  .invitation{
-    
-    min-height: 2.5rem;
-    &-persons{
-      min-height: 3.5rem;
-      margin-bottom: .15rem;
-      background: #fff;
-      border-radius: .15rem;
-      box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
-      &-head{
-        width: 100%;
-        height: 1rem;
-        font-size: .26rem;
-        position: relative;
-        border-bottom: 1px solid rgb(237,238,242);
-        
-        .perImg{
-          width: 0.6rem;
-          height: 0.6rem;
-          border-radius: 50%;
-          position: absolute;
-          top: 50%;
-          left: 3%;
-          transform: translateY(-50%);
-        }
-        span{
-          position: absolute;
-          font-weight: 666;
-          left: 15%;
-          top: 18%;
-          color: rgba($color: #000, $alpha: .8);
-        }
-        .time{
-          display: inline;
-          position: absolute;
-          bottom: 5%;
-          left: 18%;
-          color: rgba($color: #000, $alpha: .5);
-        }
-      }
-
-      &-content{
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        // text-align: center;
-        padding: .2rem .2rem 0 .2rem;
-        min-height: 2.5rem;
-        &-title{
-          font-size: .35rem;
-          font-weight: 555;
-          overflow-y: hidden;
-        }
-        .details{
-          font-size: .3rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: normal;
-          display: -webkit-box;
-          word-break: break-word;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3; 
-          margin-top: .2rem;
-          color: rgba($color: #000, $alpha: .7);
-        }
-        
-      }
-      .footer{
-          height: 0.5rem;
-          padding: 0 .2rem;
-          position: relative;
-          font-size: .3rem;
-          .comment, .give{
-            position: absolute;
-            right: 5%;
-            top: -10%;
-          }
-          .give{
-            right: 21%;
-          }
-      }
+.emotionBox{
+  min-height: 5rem;
+  .mp-echarts {
+    width: 100%;
+    height: 5rem;
+    &.twos{
+      height: 8rem;
     }
   }
 }
