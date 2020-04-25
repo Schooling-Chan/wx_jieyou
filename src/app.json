@@ -1,8 +1,14 @@
 {
     "pages": [
+        "pages/center/main",
+        "pages/mailbox/main",
+        "pages/mailbox_detail/main",
+        "pages/profile_detail/main",
+        "pages/system_detail/main",
+        "pages/comments_detail/main",
+        "pages/drawLetter_detail/main",
         "pages/index/main",
         "pages/menu/main",
-        "pages/center/main",
         "pages/logs/main",
         "pages/counter/main"
     ],
