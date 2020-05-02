@@ -70,9 +70,14 @@ function initChart (canvas, width, height) {
   var option = {
     backgroundColor: '#fff',
     color: ['#37A2DA', '#67E0E3'],
-   
+    
+    
     legend: {
-      data: ['A', 'B']
+      type:'plain',
+      id:'tips',
+      show: true,
+      bottom: '20rpx',
+      data: ['最新成交价', '预购队列']
     },
     grid: {
       containLabel: true
@@ -82,8 +87,8 @@ function initChart (canvas, width, height) {
       data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
     },
     yAxis: {
-      x: 'center',
       type: 'value',
+      name: '心情指数',
       splitLine: {
         lineStyle: {
           type: 'dashed'
@@ -91,12 +96,12 @@ function initChart (canvas, width, height) {
       }
     },
     series: [{
-      name: 'A',
+      name: '最新成交价',
       type: 'line',
       smooth: true,
       data: [18, 36, 65, 30, 78, 40, 33]
     }, {
-      name: 'B',
+      name: '预购队列',
       type: 'line',
       smooth: true,
       data: [12, 50, 51, 35, 70, 30, 20]
@@ -297,13 +302,13 @@ export default {
 
 <style scoped lang="scss">
 $bg:#f0f0f0;
-.mainBox{
-  background: $bg;
-  font-size: 100rpx;
-  overflow-x: hidden;
+.mainBox {
+    background: $bg;
+    font-size: 100rpx;
+    overflow-x: hidden;
 }
-//公共题目
-.title{
+
+.title {
     height: 1rem;
     font-size: .36rem;
     font-weight: 666;
@@ -312,38 +317,33 @@ $bg:#f0f0f0;
     background: $bg;
     position: relative;
     color: rgb(151, 151, 151);
-    &-text{
-      width: 28%;
-      text-align: center;
-      background: $bg;
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-
+    &-text {
+        width: 28%;
+        text-align: center;
+        background: $bg;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
     }
-
-    &::before{
-      content: '';
-      display: block;
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-      width: 34%;
-      height: 4rpx;
-      background: #ccc;
-
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        width: 34%;
+        height: 4rpx;
+        background: #ccc;
     }
-    
 }
 // headBox
 .headBox{
-  // margin: .3rem auto;
   width: 100%;
   background: #fff;
   height: 2.6rem;
