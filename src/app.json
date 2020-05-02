@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/menu/main",
         "pages/center/main",
         "pages/mailbox/main",
         "pages/mailbox_detail/main",
@@ -11,8 +12,6 @@
         "pages/content/main",
         "pages/search/main",
         "pages/index/main",
-        "pages/menu/main",
-        "pages/logs/main",
         "pages/counter/main"
     ],
     "window": {

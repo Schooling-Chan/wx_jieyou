@@ -58,8 +58,10 @@
 </template>
 
 <script>
-import * as echarts from 'echarts/dist/echarts.simple.min'
+// import * as echarts from '../../../static/plugins/echarts.min'
 import mpvueEcharts from 'mpvue-echarts'
+
+let echarts = require('../../../static/plugins/echarts.min');
 
 function initChart (canvas, width, height) {
   const chart = echarts.init(canvas, null, {
