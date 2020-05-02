@@ -1,3 +1,9 @@
 {
-    "navigationBarTitleText": "个人中心"
+    "navigationBarTitleText": "个人中心",
+     "usingComponents":{
+       "van-button": "../../static/vant-weapp/dist/button/index",
+       "van-icon": "./../static/vant-weapp/dist/icon/index",
+       "van-row": "./../static/vant-weapp/dist/row/index",
+       "van-col": "./../static/vant-weapp/dist/col/index"
+     }
 }
