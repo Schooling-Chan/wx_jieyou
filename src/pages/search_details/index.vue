@@ -102,7 +102,7 @@ $padding: .2rem;
         }
         .details{
           font-size: .3rem;
-          margin-top: .2rem;
+          margin: .2rem auto;
           color: rgb(117,122,125);
         }
         

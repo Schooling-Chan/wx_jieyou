@@ -1,18 +1,20 @@
 {
     "pages": [
+        "pages/index/main",
+        "pages/address/main",
+        "pages/record/main",
+        "pages/content/main",
+        "pages/comments_detail/main",
+        "pages/search_details/main",
+        "pages/mood/main",
         "pages/menu/main",
         "pages/center/main",
         "pages/mailbox/main",
         "pages/mailbox_detail/main",
         "pages/profile_detail/main",
         "pages/system_detail/main",
-        "pages/comments_detail/main",
         "pages/drawLetter_detail/main",
-        "pages/search_details/main",
-        "pages/content/main",
-        "pages/search/main",
-        "pages/index/main",
-        "pages/counter/main"
+        "pages/search/main"
     ],
     "window": {
         "backgroundTextStyle": "dark",
@@ -45,5 +47,16 @@
 
 
         "position": "bottom"
+    },
+    "plugins": {
+        "routePlan": {
+            "version": "1.0.5",
+            "provider": "wx50b5593e81dd937a"
+        }
+    },
+    "permission": {
+        "scope.userLocation": {
+            "desc": "你的位置将用于定位"
+        }
     }
 }

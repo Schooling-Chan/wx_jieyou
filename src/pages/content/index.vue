@@ -1,5 +1,6 @@
 <template>
   <div class="mainBox">
+    <!-- 动态 -->
     <div class="articleBox">
       <div class="article-persons-head">
         <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
@@ -17,11 +18,12 @@
         加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
         </div>
       </div>
-      <div class="footer">
-        <div class="give iconfont icond">55+</div>
-        <div class="comment iconfont iconc">55</div>
+      <div class="footer" @click="startThings">
+        <div class="give iconfont icond" data-choose="like">{{likenum > 99 ? '99+' : likenum}}</div>
+        <div class="comment iconfont iconc" data-choose="comment">55</div>
       </div>
     </div>
+    <!-- 文章 -->
     <div class="commentBox">
       <div class="title">评论(55)</div>
       <div class="commentList">
@@ -36,11 +38,11 @@
               学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
               加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
             </div>
-            <footer class="footer">
-              <div class="comment iconfont iconc">55</div>
+            <footer class="footer" @click="startComment">
+              <div class="comment iconfont iconc" >55</div>
             </footer>
             <div class="answerList">
-              <div class="answers">
+              <div class="answers" data-user="555">
                 <div class="nameHead">
                   <span>555</span>
                   回复
@@ -105,12 +107,34 @@
           </div>
       </div>
     </div>
+    <!-- 评论 -->
+    <div class="discussBox">
+      <textarea name="" id="dicuss" placeholder="我要评论" fixed="true" :focus="dicussShow" cursor-spacing="10" @blur="dicussLeft"></textarea>
+      <button class="postBtn">发送</button>
+    </div>
   </div>
 </template>
 
 <script>
 
 export default {
+  data:{
+    dicussShow:false,
+    likenum: 100
+  },
+  methods:{
+    startThings(e){
+      console.log(e.mp.target.dataset.choose);
+      let choose = e.mp.target.dataset.choose;
+      choose === "comment" ? this.startComment() : (choose === "like" ? this.likenum++ : null);
+    },
+    startComment(e){
+      return this.dicussShow = true;
+    },
+    dicussLeft(e){
+      return this.dicussShow = false;
+    }
+  },
   onLoad(e){
     let id = e.id;
     console.log(e);
@@ -125,7 +149,7 @@ $padding: .2rem;
 
 .mainBox {
     font-size: 100rpx;
-    padding: $padding;
+    // padding: $padding;
     overflow-x: hidden;
     font-family: "微软雅黑";
 }
@@ -158,6 +182,7 @@ $padding: .2rem;
 
 .articleBox{
   padding: $padding;
+  margin: $padding;
   border-radius: .15rem;
   border: 1rpx solid rgb(231, 231, 231);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
@@ -221,7 +246,7 @@ $padding: .2rem;
 
 .commentBox{
   font-size: .32rem;
-  
+  margin: $padding $padding 18% $padding ;
   .title{
     font-size: .35rem;
     margin-top: .2rem;
@@ -279,6 +304,42 @@ $padding: .2rem;
         }
       }
     }
+  }
+}
+
+.discussBox{
+  position: fixed;
+  font-size: .3rem;
+  height: auto;
+  bottom: 0;
+  background: #fff;
+  z-index: 100;
+  width: 100%;
+  .postBtn{
+    background: #00B26A;
+    color: #fff;
+    height: 0.72rem;
+    line-height: 0.72rem;
+    margin: .24rem .08rem;
+    padding: .35rem auto;
+    width: 20%;
+    font-size: .3rem;
+    float: left;
+  }
+  #dicuss{
+    padding: $padding;
+    margin: $padding .08rem;
+    border: 2rpx solid rgb(215, 215, 215);
+    border-radius: 10rpx;
+    height: 0.35rem;
+    line-height: 0.35rem;
+    width: 70%;
+    float: left;
+  }
+  &::after{
+    content: '';
+    clear: both;
+    display: block;
   }
 }
 </style>

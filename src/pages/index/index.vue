@@ -19,24 +19,24 @@
     </div>
 
     <!-- 每日一记 -->
-    <div class="noteBox">
+    <div class="noteBox" >
       <div class="title"><div class="title-text">每日打卡</div></div>
-      <div class="content">
-        <div class="medical">
-          <div class="comment-pic"><img src="../../../static/images/heart.png" alt=""></div>
+      <div class="content" >
+        <div class="expression" >
+          <div class="comment-pic" @tap="goNew" data-set="expression"><img src="../../../static/images/heart.png" alt="" data-set="expression"></div>
           <span>心情打卡</span>
         </div>
-        <div class="medical">
-          <div class="comment-pic"><img src="../../../static/images/kitmedical.png" alt=""></div>
+        <div class="medical" >
+          <div class="comment-pic" @click="goNew" data-set="medical"><img src="../../../static/images/kitmedical.png" alt="" data-set="medical"></div>
           <span>用药记录</span>
         </div>
-        <div class="weight">
-          <div class="comment-pic"><img src="../../../static/images/weight.png" alt=""></div>
+        <div class="weight" >
+          <div class="comment-pic"  @click="goNew" data-set="weight"><img src="../../../static/images/weight.png" alt="" data-set="weight"></div>
           <span>体重记录</span>
         </div>
-        <div class="hospital">
-          <div class="comment-pic"><img src="../../../static/images/hospital.png" alt=""></div>
-          <span>附近医院</span>
+        <div class="hospital" >
+          <div class="comment-pic"  @click="goNew" data-set="hospital"><img src="../../../static/images/hospital.png" alt="" data-set="hospital"></div>
+          <span>导航医院</span>
         </div>
       </div>
     </div>
@@ -62,6 +62,7 @@
 import mpvueEcharts from 'mpvue-echarts'
 
 let echarts = require('../../../static/plugins/echarts.min');
+
 
 function initChart (canvas, width, height) {
   const chart = echarts.init(canvas, null, {
@@ -298,11 +299,47 @@ export default {
   components: {
     mpvueEcharts
   },
-  onShareAppMessage () {}
+  onShareAppMessage () {},
+  methods:{
+    goNew(e){
+      let choose = e.mp.target.dataset.set;
+      console.log(e.mp.target);
+      
+      switch(choose){
+        case 'expression':
+          wx.navigateTo({url:"../mood/main"});
+          break;
+        case 'medical':
+        case 'weight':
+          wx.navigateTo({url:"../record/main"});
+          break;
+        case 'hospital':
+          // wx.navigateTo({url:"../address/main"});
+          this.address();
+          
+          break;
+      }
+    },
+    address(e){
+      let plugin = requirePlugin('routePlan');
+
+      let key = 'VFKBZ-HQWKD-QTA4G-PZ7TG-O66PS-7EBLY';  //使用在腾讯位置服务申请的key
+      let referer = '化忧小栈';   //调用插件的小程序的名称
+      let endPoint = JSON.stringify({  //终点
+        'name': '广州市越秀区广东省中医院',
+        'latitude': 23.124852,
+        'longitude': 113.258812
+      });
+      wx.navigateTo({
+        url: 'plugin://routePlan/route-plan?key=' + key + '&referer=' + referer + '&endPoint=' + endPoint
+      });
+    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
+
 $bg:#f0f0f0;
 .mainBox {
     background: $bg;
@@ -418,7 +455,7 @@ $bg:#f0f0f0;
   .medical .comment-pic{
     background: linear-gradient(45deg, rgb(191,213,252), rgb(230, 230, 230));
   }
-  .hospital .comment-pic{
+  .expression .comment-pic,.hospital .comment-pic{
     background: linear-gradient(45deg, rgb(156,222,255), rgb(230, 230, 230));
   }
   .weight .comment-pic{
@@ -438,6 +475,7 @@ $bg:#f0f0f0;
       width: 1rem;
       line-height: 1rem;
       border-radius: 50%;
+      z-index: 100;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -445,6 +483,7 @@ $bg:#f0f0f0;
         height: 50%;
         width: 50%;
         position: absolute;
+        z-index: 99;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
@@ -454,7 +493,7 @@ $bg:#f0f0f0;
       }
     }
 
-    .medical, .hospital,.weight{
+    .expression, .medical, .hospital,.weight{
       height: 1.6rem;
       text-align: center;
       flex: 2;

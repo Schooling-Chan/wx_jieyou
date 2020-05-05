@@ -8,47 +8,30 @@
     <div class="headBox">
       <div class="content">
         <div class="letter"  @tap="toMailBox">
-          <div class="letter-pic"><img src="../../../static/images/letter.png" alt="">
+          <div class="letter-pic"><img src="" alt="">
           </div>
           <span class="letter-span">信箱</span>
         </div>
         <div class="drawLetter" @tap="toDrawLetterDetail">
-          <div class="drawLetter-pic"><img src="../../../static/images/drawLetter.png" alt="">
+          <div class="drawLetter-pic"><img src="" alt="">
           </div>
           <span class="drawLetter-span">草稿箱</span>
         </div>
         <div class="news" @tap="toCommentsDetail">
-          <div class="news-pic"><img src="../../../static/images/news.png" alt="">
+          <div class="news-pic"><img src="" alt="">
           </div>
           <span class="news-span">评论</span>
         </div>
       </div>
     </div>
     <div class="information">
-      <div class="system_information" @tap="toSystemDetail">
-        <span></span>
-        <img src="../../../static/images/system_info.png" alt="">
-        <span>系统消息</span>
-        <img  class="small" src="../../../static/images/small.png" alt="">
-      </div>
-      <div class="comments_information" @tap="toCommentsDetail" >
-        <span></span>
-       <img src="../../../static/images/comments.png" alt="">
-        <span>我的评论</span>
-        <img  class="small" src="../../../static/images/small.png" alt="">
-      </div>
-      <div class="profile_information" @tap="toProfileDetail">
-        <span></span>
-        <img src="../../../static/images/profile_info.png" alt="">
-        <span>我的资料</span>
-        <img class="small" src="../../../static/images/small.png" alt="">
-      </div>
+      
     </div>
   </main>
 </template>
 <script>
 
-    const LOGOUT_URL ="http://120.55.44.167:40001/mock/19/jieyou/api/logout"
+    // const LOGOUT_URL ="http://120.55.44.167:40001/mock/19/jieyou/api/logout"
     export default {
     data(){
         return{
