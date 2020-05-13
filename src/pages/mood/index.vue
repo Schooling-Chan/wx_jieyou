@@ -1,23 +1,22 @@
 <template>
   <div class="mainBox">
     <div class="editorBox">
-      <div class="editor-control" @click="format">
-        <div v-if="config.bold" :class="'iconfont1 iconbold ' + (config.bold ? 'ql-active' : '')" data-name="bold"></div>
-        <div v-if="config.fontSize" :class="'iconfont1 icontypeface ' + (config.fontSize === '24px' ? 'ql-active' : '')" data-name="fontSize" data-value="24px"></div>
-        <div v-if="config.insertImage" class="iconfont1 iconimg" @click="insertImage"></div>
-      </div>
       <editor
         id="editor"
         class="ql-container"
-        placeholder="请记录下今天的心情.."
-        bindready="onEditorReady"
+        placeholder="请记录下今天的心情(插入图片为发表动态).."
+        @ready="onEditorReady"
+        @input="onEditorInput"
         showImgSize
         showImgToolbar
         showImgResize>
       </editor>
     </div>
     <div class="expressionBox" @click="showExpression">
-      <div class="happyBox" data-ex="happy">
+      <div class="happyBox" data-ex="excite">
+        <div>兴奋</div>
+      </div>
+      <div class="exciteBox" data-ex="happy">
         <div>开心</div>
       </div>
       <div class="sadBox" data-ex="sad">
@@ -26,51 +25,70 @@
       <div class="angryBox" data-ex="angry">
         <div>生气</div>
       </div>
+      <div class="calmBox" data-ex="calm">
+        <div>平静</div>
+      </div>
+      
+    </div>
+    <div class="imageBox">
+      <span class="imgplus" @click="insertImage">+</span>
+      <div v-for="(item, index) in images" :key="index"  class="imgOutput">
+        <img :src="item" alt="">
+      </div>
+      <!-- <div   class="imgOutput">
+        <img src="../../../static/images/1.jpg" alt="">
+      </div> -->
     </div>
     <button @click="postContext" class="postBtn">提交</button>
   </div>
 </template>
 
 <script>
+import $http from '../../../static/plugins/ajax';
+
+
 
 export default {
   onLoad(e){
     let id = e.id;
     console.log(e);
   },
+  
+  data(){
+    return {
+      expression:null,
+      images:[],
+    }
+  },
   methods:{
     onEditorReady() {
-      const that = this
+      const that = this;
       wx.createSelectorQuery().select('#editor').context(function (res) {
         that.editorCtx = res.context
       }).exec()
     },
-    format (e) {
-      console.log('format')
-      console.log(e)
-      let { name, value } = e.target.dataset
-      if (!name) return
-      this.editorCtx.format(name, value)
+    onEditorInput(){
+      const that = this;
+      
+      this.editorCtx.getContents({
+        success: res => {
+          if(/^(\n)+$/g.test(res.text)) that.images = [];
+          // console.log(that.images, res);
+          return;
+        }
+      });
     },
     insertImage () {
-      const that = this
+      const that = this;
+      if(that.images.length >= 3) return;
       wx.chooseImage({
         count: 1,
         sizeType: ['original', 'compressed'],
         sourceType: ['album', 'camera'],
         success: function (res) {
-          console.log(res.tempFilePaths);
+          // console.log(res.tempFilePaths);
+          
           that.images.push(res.tempFilePaths[0]);
-          that.editorCtx.insertImage({
-            src: res.tempFilePaths[0],
-            count: 1,
-            width:"33%",
-            height:"80",
-            success: function (res) {
-              
-              console.log('insert image success')
-            }
-          });
           //uploadFile上传图片
         }
       });
@@ -90,22 +108,157 @@ export default {
     },
     postContext(e){
       const that = this;
+      let contents = null;
       
       this.editorCtx.getContents({
         success: res => {
           console.log(res);
+          if(res.text !== "\n"){
+            contents = res.text; 
+            console.log(contents);
+            that.postAjax(contents, that.expression, that.images);
+            return;
+          }
+          
+          mpvue.showToast({
+            title: '内容不能为空', // 标题
+            duration: 1000 , // 提示窗停留时间，默认1500ms,
+            icon:'none',
+            success:function(){
+              return;
+            }
+          });
+          
         }
       });
-    }
-  },
-  data: {
-    config: {
-      bold: true,
-      fontSize: true,
-      insertImage: true,
+
     },
-    expression:null,
-    images:[],
+    postAjax(...arg){
+      let that = this;
+      console.log(arg);
+      let heart = {
+        'angry':{
+          index:20,
+          num:1
+        },
+        'sad':{
+          index:40,
+          num:2
+        },
+        'calm':{
+          index:60,
+          num:3
+        },
+        'happy':{
+          index:80,
+          num:4
+        },
+        'excite':{
+          index:100,
+          num:5
+        },
+      }
+      mpvue.showActionSheet({
+        itemList: ['提交到日记', '提交到心情', '提交到动态'],
+        success (res) {
+          // console.log(res.tapIndex);
+          let index = res.tapIndex;
+          switch(index){
+            case 0:
+              $http.myAxios({
+                url: '/jieyou/api/diaryRecord',
+                methods: 'post',
+                data:{
+                  'moodLevel': heart[arg[1]].index,
+                  'moodType': heart[arg[1]].num,
+                  'content':arg[0]
+                }
+              }).then(res =>{
+                mpvue.showToast({
+                  title: '提交完成', // 标题
+                  icon: 'success',  // 图标类型，默认success
+                  duration: 1500 , // 提示窗停留时间，默认1500ms
+                });
+              }).catch(err=>{
+                console.log(err);
+              });
+              break;
+            case 1:
+              $http.myAxios({
+                url: '/jieyou/api/moodRecord',
+                methods: 'post',
+                data:{
+                  'moodType': heart[arg[1]].num,
+                  'content':arg[0]
+                }
+              }).then(res =>{
+                mpvue.showToast({
+                  title: '提交完成', // 标题
+                  icon: 'success',  // 图标类型，默认success
+                  duration: 1500 , // 提示窗停留时间，默认1500ms
+                });
+              }).catch(err=>{
+                console.log(err);
+              });
+              break;
+            default:
+              
+              $http.myAxios({
+                url: '/jieyou/api/moodRecord',
+                methods: 'post',
+                data:{
+                  'pictureUrls': arg[2],
+                  'content':arg[0]
+                }
+              }).then(res =>{
+                mpvue.showToast({
+                  title: '提交完成', // 标题
+                  icon: 'success',  // 图标类型，默认success
+                  duration: 1500 , // 提示窗停留时间，默认1500ms
+                });
+              }).catch(err=>{
+                console.log(err);
+              });
+              // let img = arg[2][0],
+              //  content = arg[0];
+              // new Promise(resolve=>{
+              //   mpvue.uploadFile({
+              //       url: '/jieyou/api/liveMessage',
+              //       header : {
+              //           'content-type': 'application/json', // 默认值
+              //           "token": "a4a3e938-59e0-39e0-ad6f-601f29c2e2d9"
+              //       },
+              //       filePath: img,
+              //       formData: {
+              //         'content': content
+              //       },
+              //       success: (res)=>{
+              //         resolve(res);
+              //       }
+              //   })
+              // }).then(res => {
+              //   mpvue.showToast({
+              //     title: '提交完成', // 标题
+              //     icon: 'success',  // 图标类型，默认success
+              //     duration: 1500 , // 提示窗停留时间，默认1500ms
+              //   });
+              // }).catch(err=>{
+              //   console.log(err);
+              // });
+              break;
+          }
+          that.editorCtx.clear({
+            success:()=>{
+              that.images = [];
+              console.log('清空');
+            }
+          })
+        },
+        fail (res) {
+          console.log(res.errMsg)
+        }
+      })
+    }
   },
   mounted () {
     // console.log('mounted')
@@ -119,7 +272,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import url('../../../static/fonts/invitation/index.css');
+
 
 $padding: .2rem;
 
@@ -132,39 +285,14 @@ $padding: .2rem;
 
 
 
-.ql-active {
-  color: #06c;
-}
-.ql-container {
-  box-sizing: border-box;
-  padding: 12px 0px;
-  width: 100%;
-  height: auto;
-  border-top: 1px solid #ccc;
-  font-size: 16px;
-  line-height: 1.5;
-}
+
 .editorBox{
   font-size: .3rem;
   position: relative;
   background: #efefef;
   padding: $padding;
   border-radius: .1rem;
-  .editor-control{
-    width: 100%;
-    height: .8rem;
-    line-height: .8rem;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    box-sizing: border-box;
-    align-items: center;
-    .iconfont1{
-      flex: 1;
-      text-align: center;
-    }
-    
-  }
+  
 }
 
 
@@ -207,6 +335,43 @@ $padding: .2rem;
     background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTg4NDk0MzQzMTIxIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9Ijk5NjciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTc1Ni4zNjM2MzYgNDY1LjQ1NDU0NWE1OC4xODE4MTggNTguMTgxODE4IDAgMSAxIDAtMTE2LjM2MzYzNiA1OC4xODE4MTggNTguMTgxODE4IDAgMCAxIDAgMTE2LjM2MzYzNk02MjguMzYzNjM2IDc5MS4yNzI3MjdhMzQuOTA5MDkxIDM0LjkwOTA5MSAwIDAgMS0zNC45MDkwOTEtMzQuOTA5MDkxYzAtNDQuOTE2MzY0LTM2LjUzODE4Mi04MS40NTQ1NDUtODEuNDU0NTQ1LTgxLjQ1NDU0NXMtODEuNDU0NTQ1IDM2LjUzODE4Mi04MS40NTQ1NDUgODEuNDU0NTQ1YTM0LjkwOTA5MSAzNC45MDkwOTEgMCAwIDEtNjkuODE4MTgyIDBjMC04My40MDk0NTUgNjcuODYzMjczLTE1MS4yNzI3MjcgMTUxLjI3MjcyNy0xNTEuMjcyNzI3czE1MS4yNzI3MjcgNjcuODYzMjczIDE1MS4yNzI3MjcgMTUxLjI3MjcyN0EzNC45MDkwOTEgMzQuOTA5MDkxIDAgMCAxIDYyOC4zNjM2MzYgNzkxLjI3MjcyN00yNzkuMjcyNzI3IDQ2NS40NTQ1NDVhNTguMTgxODE4IDU4LjE4MTgxOCAwIDEgMSAwLTExNi4zNjM2MzYgNTguMTgxODE4IDU4LjE4MTgxOCAwIDAgMSAwIDExNi4zNjM2MzZNNTEyIDIzLjI3MjcyN0MyNDIuMDgyOTA5IDIzLjI3MjcyNyAyMy4yNzI3MjcgMjQyLjA4MjkwOSAyMy4yNzI3MjcgNTEyczIxOC44MTAxODIgNDg4LjcyNzI3MyA0ODguNzI3MjczIDQ4OC43MjcyNzMgNDg4LjcyNzI3My0yMTguODEwMTgyIDQ4OC43MjcyNzMtNDg4LjcyNzI3M1M3ODEuOTE3MDkxIDIzLjI3MjcyNyA1MTIgMjMuMjcyNzI3IiBmaWxsPSIjNzk3OTc5IiBwLWlkPSI5OTY4Ij48L3BhdGg+PC9zdmc+') no-repeat;
     background-size: 100% 100%;
     
+  }
+  .calmBox{
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTg4ODIyNjc5NjgwIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjYyMzEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTg3Mi44MDI5MjggNzU1Ljk5NDA2IDg3Mi44NjQzMjYgNzU1Ljk5NDA2IDg3Mi44NjQzMjYgNzU1LjYyNDY0NloiIHAtaWQ9IjYyMzIiPjwvcGF0aD48cGF0aCBkPSJNODA3LjI3MzQ2OSAyMTYuNzI3MDQzYy0xNjIuODA4MDE2LTE2Mi44MzY2NjktNDI3LjczNjg3NC0xNjIuODM2NjY5LTU5MC41NDQ4OTEgMC0xNjIuODM2NjY5IDE2Mi44MDY5OTMtMTYyLjgzNjY2OSA0MjcuNzM2ODc0IDAgNTkwLjU0Mzg2NyAxNjIuODA4MDE2IDE2Mi44Mzc2OTIgNDI3LjczNzg5OCAxNjIuODM3NjkyIDU5MC41NDQ4OTEgMEM5NzAuMTEwMTM3IDY0NC40NjI4OTQgOTcwLjExMDEzNyAzNzkuNTM0MDM2IDgwNy4yNzM0NjkgMjE2LjcyNzA0M003NjQuODkzMjQyIDc2NC45MjAzNmMtMTM5LjQ0NDkxMiAxMzkuNDQzODg5LTM2Ni4zNzAyMjUgMTM5LjQxNDIxMy01MDUuNzk4NzY0IDAtMTM5LjQ1OTIzOS0xMzkuNDczNTY1LTEzOS40NTkyMzktMzY2LjM1NDg3NSAwLTUwNS44Mjc0MTcgMTM5LjQyODUzOS0xMzkuNDI5NTYzIDM2Ni4zNTQ4NzUtMTM5LjQ2MDI2MiA1MDUuNzk4NzY0IDBDOTA0LjMzNjEwOCAzOTguNTIxNDgyIDkwNC4zMzYxMDggNjI1LjQ3NjQ3MSA3NjQuODkzMjQyIDc2NC45MjAzNiIgcC1pZD0iNjIzMyI+PC9wYXRoPjxwYXRoIGQ9Ik0zODEuNzI0NDIzIDQ2OC4wMjEzN2MyNC43ODM0NTMgMCA0NC45NTM4NDEtMjAuMTY5MzY1IDQ0Ljk1Mzg0MS00NC45NjcxNDQgMC0yNC44Mjg0NzgtMjAuMTcwMzg4LTQ1LjAyNzUxOS00NC45NTM4NDEtNDUuMDI3NTE5LTI0Ljg0MjgwNSAwLTQ1LjAxMzE5MyAyMC4xOTkwNDEtNDUuMDEzMTkzIDQ1LjAyNzUxOUMzMzYuNzExMjMgNDQ3Ljg1MjAwNCAzNTYuODgxNjE4IDQ2OC4wMjEzNyAzODEuNzI0NDIzIDQ2OC4wMjEzNyIgcC1pZD0iNjIzNCI+PC9wYXRoPjxwYXRoIGQ9Ik02NDAuNjgwMjQzIDQ2OC4wOTUwNDhjMjQuODEyMTA1IDAgNDUuMDEwMTIzLTIwLjIxMzM2NyA0NS4wMTAxMjMtNDUuMDEyMTcgMC0yNC44Mjc0NTUtMjAuMTk4MDE4LTQ0Ljk5NjgyLTQ1LjAxMDEyMy00NC45OTY4Mi0yNC43ODU0OTkgMC00NC45NTM4NDEgMjAuMTY5MzY1LTQ0Ljk1Mzg0MSA0NC45OTY4MkM1OTUuNzI2NDAxIDQ0Ny44ODE2OCA2MTUuODk0NzQzIDQ2OC4wOTUwNDggNjQwLjY4MDI0MyA0NjguMDk1MDQ4IiBwLWlkPSI2MjM1Ij48L3BhdGg+PHBhdGggZD0iTTY0Mi4yNDU5MDEgNjE5LjA1ODI5NGwtMi40NTM4ODggMC43OTgxNzljLTQwLjMxMDA3OCAxOC4yNDg2MTktODMuNTQ4ODU4IDI3LjUzNDEtMTI4LjQxMTYyNSAyNy41MzQxLTQ2LjM0MzQ5MSAwLTkwLjE3Mzc0Mi05LjM3NTUzMS0xMzAuMzA1NzY1LTI3Ljc5OTEzNmwtMi40MjUyMzYtMC43NDE4OTdjLTEuNTA4MzUzLTAuNDEzNDE2LTMuNTQ4ODI2LTEuMDAzODYzLTYuMDkyNzY1LTEuMDAzODYzLTE0Ljc1NzA5OSAwLTI2LjczNDg5OCAxMS45Nzc3OTktMjYuNzM0ODk4IDI2LjY3NTU0NiAwIDYuOTc4OTQ4IDMuMjgyNzY2IDEzLjk4ODU5NiA4LjY5NTAzMyAxOS4yNTM1MDZsLTAuMzI1NDExIDEuNjI1MDEgNi44MzE1OTIgMy4wNzYwNThjNDcuOTExMTk2IDIxLjY3OTc2NSAxMDAuMDIxMDE4IDMzLjA5NTc2OSAxNTAuNjgxODM4IDMzLjA5NTc2OSA1MS42MDg0MDIgMCAxMDIuMTgwMTk0LTExLjEyMDI2OCAxNTAuOTc4NTk3LTMzLjM2MTgyOSA4LjU3NTMwNi00LjcwMzExNSAxMy45MjgyMjEtMTMuNzIxNTEzIDEzLjkyODIyMS0yMy41MTE0ODNDNjc2LjYxMTU5MyA2MjcuNDU4NjE1IDY2MS4wMjc2NjMgNjEzLjI5MDk0MSA2NDIuMjQ1OTAxIDYxOS4wNTgyOTQiIHAtaWQ9IjYyMzYiPjwvcGF0aD48L3N2Zz4=') no-repeat;
+    background-size: 100% 100%;
+  }
+  .exciteBox{
+    background:url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTg4ODQyNjg4OTY0IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjI3NjAiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTUxMi4wMDIgNTEyLjAwMm0tNDkxLjk4OCAwYTQ5MS45ODggNDkxLjk4OCAwIDEgMCA5ODMuOTc2IDAgNDkxLjk4OCA0OTEuOTg4IDAgMSAwLTk4My45NzYgMFoiIGZpbGw9IiNGRERGNkQiIHAtaWQ9IjI3NjEiPjwvcGF0aD48cGF0aCBkPSJNNjE3LjQzIDkzMS4zNTZjLTI3MS43MTYgMC00OTEuOTg2LTIyMC4yNjgtNDkxLjk4Ni00OTEuOTg2IDAtMTQ1LjE2OCA2Mi44ODYtMjc1LjYzMiAxNjIuODg4LTM2NS42ODRDMTI5LjA1NCAxNTUuMTI0IDIwLjAxNCAzMjAuODI4IDIwLjAxNCA1MTJjMCAyNzEuNzE2IDIyMC4yNjggNDkxLjk4NiA0OTEuOTg2IDQ5MS45ODYgMTI2LjU0OCAwIDI0MS45MjQtNDcuNzk2IDMyOS4wOTgtMTI2LjI5OC02Ny4xMDYgMzQuMzEtMTQzLjEyNCA1My42NjgtMjIzLjY2OCA1My42Njh6IiBmaWxsPSIjRkNDNTZCIiBwLWlkPSIyNzYyIj48L3BhdGg+PHBhdGggZD0iTTU4My41ODQgODQyLjM1Yy0xMDkuOTg0IDAtMTk5LjE0Ni04OS4xNjItMTk5LjE0Ni0xOTkuMTQ2aDM5OC4yOTJjMCAxMDkuOTg0LTg5LjE2MiAxOTkuMTQ2LTE5OS4xNDYgMTk5LjE0NnoiIGZpbGw9IiM3RjE4NEMiIHAtaWQ9IjI3NjMiPjwvcGF0aD48cGF0aCBkPSJNNDI2LjMxNCAzNTkuNzA0bS02MC4wNDQgMGE2MC4wNDQgNjAuMDQ0IDAgMSAwIDEyMC4wODggMCA2MC4wNDQgNjAuMDQ0IDAgMSAwLTEyMC4wODggMFoiIGZpbGw9IiNGRkZGRkYiIHAtaWQ9IjI3NjQiPjwvcGF0aD48cGF0aCBkPSJNNzY0LjM3NCAzNTkuNzA0bS02MC4wNDQgMGE2MC4wNDQgNjAuMDQ0IDAgMSAwIDEyMC4wODggMCA2MC4wNDQgNjAuMDQ0IDAgMSAwLTEyMC4wODggMFoiIGZpbGw9IiNGRkZGRkYiIHAtaWQ9IjI3NjUiPjwvcGF0aD48cGF0aCBkPSJNNTg3LjUzIDc1OS43MzJjLTUzLjgzMi0yNS4wMS0xMTMuNTY4LTIxLjM3Ni0xNjIuMDEgNC41NjQgMzYuNCA0Ny40NDIgOTMuNjQyIDc4LjA1OCAxNTguMDYgNzguMDU4YTE5OC40MTIgMTk4LjQxMiAwIDAgMCA3OS44MDYtMTYuNjg0Yy0xNy45MjgtMjcuNzQ4LTQzLjYzOC01MC45Ny03NS44NTYtNjUuOTM4eiIgZmlsbD0iI0ZDNEM1OSIgcC1pZD0iMjc2NiI+PC9wYXRoPjxwYXRoIGQ9Ik0zMDAuNTcyIDQ4MS41NDJjLTM2LjUzNiAwLTY2LjE1NiAyOS42Mi02Ni4xNTYgNjYuMTU2aDEzMi4zMTRjMC0zNi41MzYtMjkuNjE4LTY2LjE1Ni02Ni4xNTgtNjYuMTU2ek04NzcuNjI4IDQ3Mi42NzhjLTM2LjUzNiAwLTY2LjE1NiAyOS42Mi02Ni4xNTYgNjYuMTU2aDEzMi4zMTRjLTAuMDAyLTM2LjUzOC0yOS42MjItNjYuMTU2LTY2LjE1OC02Ni4xNTZ6IiBmaWxsPSIjRjlBODgwIiBwLWlkPSIyNzY3Ij48L3BhdGg+PHBhdGggZD0iTTQzNi43ODIgNjQzLjIwNHYzMS4wODZjMCAxMy4xMDggMTAuNjI2IDIzLjczMiAyMy43MzIgMjMuNzMySDcxNC4xNmMxMy4xMDggMCAyMy43MzItMTAuNjI2IDIzLjczMi0yMy43MzJ2LTMxLjA4Nkg0MzYuNzgyeiIgZmlsbD0iI0YyRjJGMiIgcC1pZD0iMjc2OCI+PC9wYXRoPjxwYXRoIGQ9Ik01OTguNjcwOTEyIDIxMi4wMTAzMTNhMTAyLjc0IDU3LjM3NCAxNS44MDEgMSAwIDMxLjI0NTU0MS0xMTAuNDEyMDQ1IDEwMi43NCA1Ny4zNzQgMTUuODAxIDEgMC0zMS4yNDU1NDEgMTEwLjQxMjA0NVoiIGZpbGw9IiNGQ0VCODgiIHAtaWQ9IjI3NjkiPjwvcGF0aD48cGF0aCBkPSJNOTM1LjQ0MiAyMjQuMDk2Yy01Ni41NDYtODMuMDEtMTM1LjMyNC0xNDcuMTE2LTIyNy44MTYtMTg1LjM4Ni0xMC4yMTItNC4yMjQtMjEuOTIyIDAuNjMtMjYuMTQ4IDEwLjg0Mi00LjIyNCAxMC4yMTYgMC42MjggMjEuOTIgMTAuODQyIDI2LjE0OCA4NS4yNjYgMzUuMjggMTU3Ljg5NCA5NC4zOSAyMTAuMDQgMTcwLjkzNCA1My4zODggNzguMzggODEuNjEyIDE3MC4xNCA4MS42MTIgMjY1LjM2OCAwIDI2MC4yNDgtMjExLjcyNCA0NzEuOTctNDcxLjk3IDQ3MS45N1M0MC4wMyA3NzIuMjQ0IDQwLjAzIDUxMiAyNTEuNzUyIDQwLjAzIDUxMiA0MC4wM2MxMS4wNTQgMCAyMC4wMTQtOC45NjIgMjAuMDE0LTIwLjAxNFM1MjMuMDU0IDAgNTEyIDBDMjI5LjY4IDAgMCAyMjkuNjggMCA1MTJzMjI5LjY4IDUxMiA1MTIgNTEyIDUxMi0yMjkuNjggNTEyLTUxMmMwLTEwMy4zLTMwLjYyMi0yMDIuODU2LTg4LjU1OC0yODcuOTA0eiIgZmlsbD0iIiBwLWlkPSIyNzcwIj48L3BhdGg+PHBhdGggZD0iTTUwNi4zODYgMzU5LjcxMmMwLTQ0LjE0NC0zNS45MTQtODAuMDU4LTgwLjA1OC04MC4wNThzLTgwLjA1OCAzNS45MTQtODAuMDU4IDgwLjA1OGMwIDQ0LjE0NCAzNS45MTQgODAuMDU4IDgwLjA1OCA4MC4wNThzODAuMDU4LTM1LjkxNCA4MC4wNTgtODAuMDU4eiBtLTEyMC4wODggMGMwLTIyLjA3MiAxNy45NTgtNDAuMDMgNDAuMDMtNDAuMDNzNDAuMDMgMTcuOTU4IDQwLjAzIDQwLjAzYzAgMjIuMDcyLTE3Ljk1OCA0MC4wMy00MC4wMyA0MC4wM3MtNDAuMDMtMTcuOTU4LTQwLjAzLTQwLjAzek04NDQuNDMgMzU5LjcxMmMwLTQ0LjE0NC0zNS45MTQtODAuMDU4LTgwLjA1OC04MC4wNThzLTgwLjA1OCAzNS45MTQtODAuMDU4IDgwLjA1OGMwIDQ0LjE0NCAzNS45MTQgODAuMDU4IDgwLjA1OCA4MC4wNThzODAuMDU4LTM1LjkxNCA4MC4wNTgtODAuMDU4eiBtLTEyMC4wODggMGMwLTIyLjA3MiAxNy45NTgtNDAuMDMgNDAuMDMtNDAuMDNzNDAuMDMgMTcuOTU4IDQwLjAzIDQwLjAzYzAgMjIuMDcyLTE3Ljk1OCA0MC4wMy00MC4wMyA0MC4wM3MtNDAuMDMtMTcuOTU4LTQwLjAzLTQwLjAzek0zNjQuNDIyIDY0My4yMDRjMCAxMjAuODQ2IDk4LjMxNCAyMTkuMTYgMjE5LjE2IDIxOS4xNnMyMTkuMTYtOTguMzE0IDIxOS4xNi0yMTkuMTZjMC0xMS4wNTQtOC45NjItMjAuMDE0LTIwLjAxNC0yMC4wMTRIMzg0LjQzNmMtMTEuMDUyLTAuMDAyLTIwLjAxNCA4Ljk2LTIwLjAxNCAyMC4wMTR6IG0zOTcuMTgyIDIwLjAxNGMtOS45ODQgODkuMzktODYuMDEyIDE1OS4xMTYtMTc4LjAyMiAxNTkuMTE2LTkyLjAwOCAwLTE2OC4wMzgtNjkuNzI2LTE3OC4wMjItMTU5LjExNmgzNTYuMDQ0eiIgZmlsbD0iIiBwLWlkPSIyNzcxIj48L3BhdGg+PHBhdGggZD0iTTYyOC44NjIgMzMuNzM0bS0yMC4wMTQgMGEyMC4wMTQgMjAuMDE0IDAgMSAwIDQwLjAyOCAwIDIwLjAxNCAyMC4wMTQgMCAxIDAtNDAuMDI4IDBaIiBmaWxsPSIiIHAtaWQ9IjI3NzIiPjwvcGF0aD48L3N2Zz4=') no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
+.imageBox{
+  height: 1.85rem;
+  margin: .8rem auto;
+  border-radius: .1rem;
+  border: 2px dashed #efefef;
+  position: relative;
+  padding: $padding;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  .imgplus{
+    display: inline-block;
+    height: 100%;
+    width: 20%;
+    text-align: center;
+    border-radius: .35rem;
+    border: 2px solid #efefef;
+    color: #D2D2D2;
+  }
+  .imgOutput{
+    width: 25%;
+    margin-left: $padding;
+    img{
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 

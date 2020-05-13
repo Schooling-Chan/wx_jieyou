@@ -1,13 +1,12 @@
 {
     "pages": [
+        "pages/menu/main",
         "pages/index/main",
-        "pages/address/main",
+        "pages/mood/main",
         "pages/record/main",
         "pages/content/main",
         "pages/comments_detail/main",
         "pages/search_details/main",
-        "pages/mood/main",
-        "pages/menu/main",
         "pages/center/main",
         "pages/mailbox/main",
         "pages/mailbox_detail/main",

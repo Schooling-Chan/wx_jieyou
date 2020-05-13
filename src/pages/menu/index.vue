@@ -4,7 +4,7 @@
     <div class="searchBox">
       <div class="inputBox" @click="goSearch">
         <text class="iconfont iconsearch"></text>
-        <div class="inputBox-tips">搜索暖心师</div>
+        <div class="inputBox-tips">疑难解答</div>
       </div>
     </div>
 
@@ -231,6 +231,7 @@ export default {
     tabIndex:0,
     changeClass:'dynamicBox',
     temp:null,
+    dataList:{}
   },
   methods:{
     getHeight:function(ele){

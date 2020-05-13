@@ -51,257 +51,178 @@
        <mpvue-echarts :echarts="echarts" :onInit="ecBarInit" canvasId="bar" />
       </div>
       <div class="mp-echarts">
-        <mpvue-echarts :echarts="echarts" :onInit="ecScatterInit" canvasId="scatter" />
+        <mpvue-echarts :echarts="echarts" :onInit="ecAllInit" canvasId="scatter" />
       </div>
     </div>
   </main>
 </template>
 
 <script>
-// import * as echarts from '../../../static/plugins/echarts.min'
-import mpvueEcharts from 'mpvue-echarts'
+import mpvueEcharts from 'mpvue-echarts';
+import $http from '../../../static/plugins/ajax';
+
 
 let echarts = require('../../../static/plugins/echarts.min');
+// let $http = require('../../utils/ajax');
+let expressions = {
+        month:null,
+        week:null
+      },
+      weight = {
+        month:null,
+        week:null
+      };
 
-
-function initChart (canvas, width, height) {
-  const chart = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  })
-  canvas.setChart(chart)
-  var option = {
+function baseEcharts( canvas, width, height, options = {
     backgroundColor: '#fff',
-    color: ['#37A2DA', '#67E0E3'],
-    
-    
+    color: ['#37A2DA'],
+
+
     legend: {
-      type:'plain',
-      id:'tips',
-      show: true,
-      bottom: '20rpx',
-      data: ['最新成交价', '预购队列']
+        type: 'plain',
+        id: 'tips',
+        show: true,
+        top: '10rpx',
+        data: ['心情指数']
     },
     grid: {
-      containLabel: true
+        containLabel: true
     },
     xAxis: {
-      type: 'category',
-      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        type: 'category',
+        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
     },
     yAxis: {
-      type: 'value',
-      name: '心情指数',
-      splitLine: {
-        lineStyle: {
-          type: 'dashed'
-        }
-      }
-    },
-    series: [{
-      name: '最新成交价',
-      type: 'line',
-      smooth: true,
-      data: [18, 36, 65, 30, 78, 40, 33]
-    }, {
-      name: '预购队列',
-      type: 'line',
-      smooth: true,
-      data: [12, 50, 51, 35, 70, 30, 20]
-    }]
-  }
-  chart.setOption(option)
-  return chart
-}
-
-let barChart, scatterChart;
-function getBarOption () {
-  return {
-    backgroundColor: '#fff',
-    color: ['#37a2da', '#32c5e9', '#67e0e3'],
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: { // 坐标轴指示器，坐标轴触发有效
-        type: 'line' // 默认为直线，可选为：'line' | 'shadow'
-      }
-    },
-    legend: {
-      data: ['热度', '正面', '负面']
-    },
-    grid: {
-      left: 20,
-      right: 20,
-      bottom: 15,
-      top: 40,
-      containLabel: true
-    },
-    xAxis: [
-      {
         type: 'value',
-        axisLine: {
-          lineStyle: {
-            color: '#999'
-          }
-        },
-        axisLabel: {
-          color: '#666'
+        name: '心情指数',
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
         }
-      }
-    ],
-    yAxis: [
-      {
-        type: 'category',
-        axisTick: { show: false },
-        data: ['汽车之家', '今日头条', '百度贴吧', '一点资讯', '微信', '微博', '知乎'],
-        axisLine: {
-          lineStyle: {
-            color: '#999'
-          }
-        },
-        axisLabel: {
-          color: '#666'
-        }
-      }
-    ],
-    series: [
-      {
-        name: '热度',
-        type: 'bar',
-        label: {
-          normal: {
-            show: true,
-            position: 'inside'
-          }
-        },
-        data: [300, 270, 340, 344, 300, 320, 310]
-      },
-      {
-        name: '正面',
-        type: 'bar',
-        stack: '总量',
-        label: {
-          normal: {
-            show: true
-          }
-        },
-        data: [120, 102, 141, 174, 190, 250, 220]
-      },
-      {
-        name: '负面',
-        type: 'bar',
-        stack: '总量',
-        label: {
-          normal: {
-            show: true,
-            position: 'left'
-          }
-        },
-        data: [-20, -32, -21, -34, -90, -130, -110]
-      }
-    ]
-  }
-}
-function getScatterOption () {
-  var data1 = []
-  var data2 = []
-  for (var i = 0; i < 10; i++) {
-    data1.push(
-      [
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 40)
-      ]
-    )
-    data2.push(
-      [
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 100)
-      ]
-    )
-  }
-  var axisCommon = {
-    axisLabel: {
-      textStyle: {
-        color: '#C8C8C8'
-      }
-    },
-    axisTick: {
-      lineStyle: {
-        color: '#fff'
-      }
-    },
-    axisLine: {
-      lineStyle: {
-        color: '#C8C8C8'
-      }
-    },
-    splitLine: {
-      lineStyle: {
-        color: '#C8C8C8',
-        type: 'solid'
-      }
-    }
-  }
-  return {
-    color: ['#FF7070', '#60B6E3'],
-    backgroundColor: '#fff',
-    xAxis: axisCommon,
-    yAxis: axisCommon,
-    legend: {
-      data: ['aaaa', 'bbbb']
-    },
-    visualMap: {
-      show: false,
-      max: 100,
-      inRange: {
-        symbolSize: [20, 70]
-      }
     },
     series: [{
-      type: 'line',
-      name: 'aaaa',
-      data: data1
-    },
-    {
-      name: 'bbbb',
-      type: 'line',
-      data: data2
-    }
-    ],
-  }
-}
+        name: '心情指数',
+        type: 'line',
+        smooth: true,
+        data: [18, 36, 65, 30, 78, 40, 33]
+    }]
+}) {
+    const chart = echarts.init(canvas, null, {
+        width: width,
+        height: height
+    })
+    canvas.setChart(chart)
+    chart.setOption(options)
+    return chart;
+};
+
+
 export default {
   data () {
     return {
       echarts,
-      initChart,
-      ecBarInit: function (canvas, width, height) {
-        barChart = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        });
-        canvas.setChart(barChart);
-        barChart.setOption(getBarOption());
-        return barChart
+      initChart: function(canvas, width, height){
+        baseEcharts(canvas, width, height);
       },
-      ecScatterInit: function (canvas, width, height) {
-        scatterChart = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        })
-        canvas.setChart(scatterChart)
-        scatterChart.setOption(getScatterOption())
-        return scatterChart
+      ecBarInit: function(canvas, width, height){
+        baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                  type: 'cross',
+                  crossStyle: {
+                      color: '#999'
+                  }
+              }
+          },
+          color:["#7DC2E6"],
+          legend: {
+              data: ['体重指数']
+          },
+          xAxis: {
+            type: 'category',
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          },
+          yAxis: {
+              type: 'value'
+          },
+          series: [{
+              data: [120, 200, 150, 80, 70, 110, 130],
+              type: 'bar'
+          }]
+        });
+      },
+      ecAllInit: function(canvas, width, height) {
+        baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          color:['#37a2da', '#32c5e9'],
+          legend: {
+              data: ['体重指数', '心情指数']
+          },
+          xAxis: [
+              {
+                  type: 'category',
+                  data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+              }
+          ],
+           yAxis: [
+              {
+                  type: 'value',
+                  name: '体重/kg',
+                  min: 0,
+                  max: 200,
+                  interval: 40,
+                  axisLabel: {
+                      formatter: '{value} '
+                  }
+              },
+              {
+                  type: 'value',
+                  name: '心情',
+                  min: 0,
+                  max: 100,
+                  interval: 20,
+                  axisLabel: {
+                      formatter: '{value}'
+                  }
+              }
+          ],
+          series: [
+              {
+                  name: '体重',
+                  type: 'bar',
+                  data: [120, 200, 150, 80, 70, 110, 130, 66, 68, 55, 80, 60]
+              },
+              {
+                  name: '心情',
+                  type: 'line',
+                  // smooth: true,
+                  yAxisIndex: 1,
+                  data: [20, 20, 15, 80, 70, 10, 30, 66, 68, 55, 80, 60]
+              }
+          ]
+        });
       }
     }
   },
   components: {
     mpvueEcharts
   },
-  onShareAppMessage () {},
+  onShow () {
+    console.dir(this.getData().then(res=>{
+      console.log(res);
+      
+    }));
+    
+  },
+  mounted(){
+    
+    
+  },
   methods:{
-    goNew(e){
+    goNew:function(e){//跳转页面
       let choose = e.mp.target.dataset.set;
       console.log(e.mp.target);
       
@@ -320,19 +241,41 @@ export default {
           break;
       }
     },
-    address(e){
+    address:function(e){//跳转地图
       let plugin = requirePlugin('routePlan');
 
       let key = 'VFKBZ-HQWKD-QTA4G-PZ7TG-O66PS-7EBLY';  //使用在腾讯位置服务申请的key
       let referer = '化忧小栈';   //调用插件的小程序的名称
       let endPoint = JSON.stringify({  //终点
-        'name': '广州市越秀区广东省中医院',
+        'name': '广东省中医院',
         'latitude': 23.124852,
         'longitude': 113.258812
       });
       wx.navigateTo({
         url: 'plugin://routePlan/route-plan?key=' + key + '&referer=' + referer + '&endPoint=' + endPoint
       });
+    },
+    getData:async function(e){
+      let weight = await ($http.myAxios({
+        url:'/jieyou/api/weight/mine/all',
+        data:{
+          'timeInterval': {
+            month:'month',
+            year:'year',
+          }
+        }
+      }));
+      let mood = await ($http.myAxios({
+        url:'/jieyou/api/moodRecord/mine/all',
+        data:{
+          'timeInterval': {
+            month:'month',
+            year:'year',
+          }
+        }
+      }));
+
+      return [weight, mood];
     }
   }
 }
