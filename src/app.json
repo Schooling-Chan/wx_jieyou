@@ -1,11 +1,12 @@
 {
     "pages": [
-        "pages/menu/main",
         "pages/center/main",
-        "pages/mailbox/main",
+        "pages/write_letter/main",
         "pages/mailbox_detail/main",
-        "pages/profile_detail/main",
+        "pages/menu/main",
+        "pages/mailbox/main",
         "pages/system_detail/main",
+        "pages/profile_detail/main",
         "pages/comments_detail/main",
         "pages/drawLetter_detail/main",
         "pages/search_details/main",

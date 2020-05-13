@@ -1,154 +1,277 @@
 <template>
-  <main class="centerContainer">
-    <div class="title">
-      <img class="avatarImg" :src="userInfo.avatarUrl" alt="">
-      <span class="userName">{{userInfo.nickName}}</span>
-      <span class="btn"><van-button round type="info" size="small" color="#01B7FA">退出登录</van-button></span>
+  <div class="centerContainer">
+    <div v-if="showLogin">
+      <LoginWindow @changeShow="getModel(arguments)" ref="lw"></LoginWindow>
+    </div>
+    <div class="top">
+      <div class="userinfo" >
+        <img  :src="userinfo.avatarUrl" alt="">
+      </div>
+      <div class="name">
+        <label>{{userinfo.nickname}}</label>
+        <p class="notice"></p>
+      </div>
+      <button class="outlogin" @click="loginout">
+        退出登录
+      </button>
     </div>
     <div class="headBox">
-      <div class="content">
-        <div class="letter"  @tap="toMailBox">
-          <div class="letter-pic"><img src="../../../static/images/letter.png" alt="">
+          <div class="content">
+            <div class="letter"  @tap="toMailBox">
+              <div class="letter-pic"><img src="../../../static/images/letter.png" alt="">
+              </div>
+              <span class="letter-span">信箱</span>
+            </div>
+            <div class="drawLetter" @tap="toDrawLetterDetail">
+              <div class="drawLetter-pic"><img src="../../../static/images/drawLetter.png" alt="">
+              </div>
+              <span class="drawLetter-span">草稿箱</span>
+            </div>
+            <div class="news" @tap="toWriteLetter">
+              <div class="news-pic"><img src="../../../static/images/news.png" alt="">
+              </div>
+              <span class="news-span">写信</span>
+            </div>
           </div>
-          <span class="letter-span">信箱</span>
         </div>
-        <div class="drawLetter" @tap="toDrawLetterDetail">
-          <div class="drawLetter-pic"><img src="../../../static/images/drawLetter.png" alt="">
-          </div>
-          <span class="drawLetter-span">草稿箱</span>
-        </div>
-        <div class="news" @tap="toCommentsDetail">
-          <div class="news-pic"><img src="../../../static/images/news.png" alt="">
-          </div>
-          <span class="news-span">评论</span>
-        </div>
+    <div class="contain">
+      <div class="row">
+        <label class="left">
+          <img class="img"  src="../../../static/images/system_info.png">
+        </label>
+        <label class="name" @tap="toSystemDetail">&nbsp;&nbsp;系统消息</label>
+        <label class="right">
+          >
+        </label>
+      </div>
+      <div class="row">
+        <label class="left">
+          <img class="img"  src="../../../static/images/profile.png">
+        </label>
+        <label class="name" @tap="toProfile" >&nbsp;&nbsp;我的资料</label>
+        <label class="right">
+          >
+        </label>
       </div>
     </div>
-    <div class="information">
-      <div class="system_information" @tap="toSystemDetail">
-        <span></span>
-        <img src="../../../static/images/system_info.png" alt="">
-        <span>系统消息</span>
-        <img  class="small" src="../../../static/images/small.png" alt="">
-      </div>
-      <div class="comments_information" @tap="toCommentsDetail" >
-        <span></span>
-       <img src="../../../static/images/comments.png" alt="">
-        <span>我的评论</span>
-        <img  class="small" src="../../../static/images/small.png" alt="">
-      </div>
-      <div class="profile_information" @tap="toProfileDetail">
-        <span></span>
-        <img src="../../../static/images/profile_info.png" alt="">
-        <span>我的资料</span>
-        <img class="small" src="../../../static/images/small.png" alt="">
+    <div class="contain">
+      <div class="row">
+        <label class="left">
+          <img class="img"  src="../../../static/images/comment.png">
+        </label>
+        <label class="name" @tap="toCommentsDetail">&nbsp;&nbsp;我的评论</label>
+        <label class="right">
+          >
+        </label>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 <script>
-
-    const LOGOUT_URL ="http://120.55.44.167:40001/mock/19/jieyou/api/logout"
+    import LoginWindow from '@/components/LoginWindow'
+    import {showSuccess, showModal, post, get,del} from '@/util'
     export default {
+    components: {
+            LoginWindow
+        },
     data(){
         return{
-            userInfo: {},//用户信息
+            // 用三元运算符直接读取缓存里面的用户信息
+            userinfo: wx.getStorageSync('userinfo') ? wx.getStorageSync('userinfo') : {},
+            showLogin:false,
+            token:'',
         }
     },
-    beforeMount(){
-        console.log('---beforeMount---');
-        //获取用户登录信息
-        this.handleGetUserInfo();
-        // this.$fly.get(LOGOUT_URL)
-        //     .then( (response) => {
-        //         console.log(response);
-        //         let moviesArr = response.data.subjects
-        //         this.moviesArr = moviesArr
-        //     })
-        //     .catch( (error) => {
-        //         console.log(error);
-        //     });
-    },
+    mounted (){
+            const userinfo = wx.getStorageSync('userinfo')
+            // 如果缓存中有userinfo的信息，说明用户登录了。
+            if (userinfo) {
+                // 将用户信息储存到data的userinfo字段里面，this.userinfo就是指的这个字段。
+                this.userinfo= userinfo
+                console.log('用户信息',this.userinfo)
+            } else {
+                wx.hideTabBar()
+                this.showLogin = true
+            }
+        },
     methods:{
-        // 获取用户登录信息
-        handleGetUserInfo(){
-            wx.getUserInfo({
-                success: (data) => {
-                    console.log(data);
-                    // 更新data中的数据
-                    this.userInfo = data.userInfo
-                },
-                fail: () => {
-                    console.log('获取失败');
-                }
-            })
-        },
         toMailBox(){
-            //跳转到信箱页面
+         //跳转到信箱页面
             wx.navigateTo({
-                url: '/pages/mailbox/main'
-            })
-        },
-        toProfileDetail(){
-            //跳转到个人资料详情
-            wx.navigateTo({
-                url: '/pages/profile_detail/main'
-            })
-        },
-        toSystemDetail(){
-            //跳转到个人系统消息
-            wx.navigateTo({
-                url: '/pages/system_detail/main'
-            })
-        },
-        toCommentsDetail(){
-            //跳转到个人系统消息
-            wx.navigateTo({
-                url: '/pages/comments_detail/main'
+                url:'/pages/mailbox/main'
             })
         },
         toDrawLetterDetail(){
-            //跳转到个人系统消息
+            //跳转到信箱页面
             wx.navigateTo({
-                url: '/pages/drawLetter_detail/main'
+                url:'/pages/drawLetter_detail/main'
             })
-        }
-    }
-
+        },
+        toWriteLetter(){
+            //跳转到评论页面
+            wx.navigateTo({
+                url:'/pages/write_letter/main'
+            })
+        },
+        toSystemDetail(){
+            //跳转到评论页面
+            wx.navigateTo({
+                url:'/pages/system_detail/main'
+            })
+        },
+        toProfile(){
+            //跳转到评论页面
+            wx.navigateTo({
+                url:'/pages/profile_detail/main'
+            })
+        },
+        toCommentsDetail(){
+            //跳转到评论页面
+            wx.navigateTo({
+                url:'/pages/comments_detail/main'
+            })
+        },
+        getModel (val) {//控制登录弹窗消息
+            console.log('val', val)
+            // 将第一个信息false赋值到showLogin变量中，控制登录弹窗消息
+            this.showLogin = val[0]
+            //this.userinfo = val[1]
+        },
+        async loginout() {
+            try {
+                let that = this
+                that.token = wx.getStorageSync('token')
+                const params= {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': that.token,
+                }
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                const res = await del('/jieyou/api/logout', params,header)
+                console.log('从后端返回的执行正确的信息是：', res)
+                if(res.data.success){
+                    wx.setStorageSync('token', '')
+                    wx.setStorageSync('userinfo', '')
+                    wx.showToast({
+                        title: '退出成功',//提示文字
+                        duration:2000,//显示时长
+                    })
+                    wx.reLaunch({
+                        url: '/pages/center/main'
+                    })
+                }else{
+                    wx.showToast({
+                        title: '加载中',//提示文字
+                        duration:2000,//显示时长
+                    })
+                }
+            } catch (e) {
+                console.log('从后端返回的执行错误的信息是：', e)
+            }
+        },
+    },
 }
 </script>
 
 <style scoped lang="scss">
-.centerContainer{
-  display:flex;
-  flex-direction:column;
-  background-color: white;
-  font-size: 60rpx;
-  overflow-x: hidden;
-}
-.title{
-  border-bottom:1px solid #f5f5f5;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size:.3rem;
-  .avatarImg{
-    width:1.5rem;
-    height:1.5rem;
-    border-radius:.5rem;
-}
-  .userName {
-    font-size:.3rem;
-    font-weight: bold;
-    padding-left:.3rem;
+  .top{
+    height: 80px;
+    width: 100%;
+    background: linear-gradient(135deg, rgb(26,222,224), rgb(230, 230, 230));
+    padding-top: 30px;
+    display: block;
+    .userinfo{
+      padding-bottom: 5px;
+      float: left;
+      img{
+        width: 120rpx;
+        height:120rpx;
+        margin: 10rpx;
+        border-radius: 50%;
+        border: 1px #D0D0D0 solid;
+      }
+    }
+    .login{
+      padding-bottom: 5px;
+      float: left;
+      img{
+        width: 120rpx;
+        height:120rpx;
+        margin: 10rpx;
+      }
+    }
+    .name{
+      padding-top: 30px;
+      padding-left: 5px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight:bold;
+      float: left;
+      .notice{
+        color: #D8D8D8;
+        font-size: 12px;
+        .number{
+          font-size: 15px;
+          color: #FFFFFF;
+          font-weight: bold;
+        }
+      }
+      .a-line{
+        background:#EA5149;
+        border: none;
+        display: inline;
+        font-size: 16px;
+        color: #FFFFFF;
+        text-decoration:underline;
+      }
+    }
+    .outlogin{
+      margin-top: 30px;
+      margin-right:60px;
+      height:30px;
+      width:25%;
+      line-height: 30px;
+      color: #FFFFFF;
+      border-color: #FFFFFF;
+      background: transparent;
+      font-size: 16px;
+      font-weight:bold;
+    }
+    .outlogin::after{
+      border-color: #FFFFFF;
+    }
   }
-  .btn{
-    margin-left:3rem;
+  .contain{
+    margin-top: 10px;
+    background:#FFFFFF;
+    font-size:15px;
+    .row{
+      padding: 0px 18px;
+      border-bottom: 1px #E8E8E8 solid;
+      height: 55px;
+      line-height: 55px;
+      .img {
+        float:left;
+        width: 20px;
+        height: 20px;
+        padding-top:16px;
+      }
+      .name {
+        float:left;
+      }
+    }
+    .right {
+      float: right;
+      color: #C8C8C8;
+      line-height:55px;
+    }
+    .left {
+      width:80%;
+    }
   }
-
-}
-
-.headBox{
+  .headBox{
   position: relative;
   font-size: .26rem;
   .content{
@@ -207,40 +330,5 @@
     }
   }
 }
-
-.information{
-  background-color: #d8efff;
-  font-size:.26rem;
-  margin-top:0.2rem;
-  margin-left: 0.2rem;
-  margin-right: 0.2rem;
-  .system_information, .comments_information,.profile_information{
-    overflow: hidden;
-    width:100%;
-    height:1.5rem;
-    margin-bottom:.2rem;
-    flex-direction:row;
-    vertical-align:middle;
-    img{
-      height:0.8rem;
-      width: 0.8rem;
-      vertical-align:middle
-    }
-    span{
-      display:inline;
-      height:100%;
-      line-height:1.5rem;
-      vertical-align:middle
-    }
-    .small{
-      /*float:right;*/
-      height:0.4rem;
-      width:0.4rem;
-      vertical-align:middle;
-      margin-left:60%;
-    }
-  }
-}
-
 
 </style>

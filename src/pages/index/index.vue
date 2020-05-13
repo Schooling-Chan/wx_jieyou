@@ -72,8 +72,6 @@ function initChart (canvas, width, height) {
   var option = {
     backgroundColor: '#fff',
     color: ['#37A2DA', '#67E0E3'],
-    
-    
     legend: {
       type:'plain',
       id:'tips',
@@ -311,179 +309,195 @@ $bg:#f0f0f0;
 }
 
 .title {
-    height: 1rem;
-    font-size: .36rem;
-    font-weight: 666;
-    margin-top: 10rpx;
-    line-height: 1rem;
-    background: $bg;
-    position: relative;
-    color: rgb(151, 151, 151);
-    &-text {
-        width: 28%;
-        text-align: center;
-        background: $bg;
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-    }
-    &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        width: 34%;
-        height: 4rpx;
-        background: #ccc;
-    }
-}
-// headBox
-.headBox{
-  width: 100%;
-  background: #fff;
-  height: 2.6rem;
-  line-height: 2.6rem;
-  display: flex;
-  flex-wrap: nowrap;
-  overflow: hidden;
-  box-sizing: border-box;
-  align-items: center;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
-  .judge,.doctor{
-    background: linear-gradient(45deg, rgb(26,222,224), rgb(230, 230, 230));
-    flex: 1;
-    width: 35%;
-    line-height: 2.08rem;
-    margin: 0 .5rem;
-    height: 2.08rem;
-    border-radius: 25rpx;
-    overflow: hidden;
-    position: relative;
-    img{
-      width: .6rem;
-      height: 0.6rem;
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    &-text{
-      width: 100%;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      color: #fff;
-      height: 100%;
-      overflow: hidden;
-      div{
-        width: 100%;
-        font-size: .36rem;
-        font-weight: 666;
-        height: 0.5rem;
-        line-height: .5rem;
-        overflow: hidden; 
-        margin-top: .88rem;
-      }
-      span{
-        font-size: .20rem;
-        display: inline-block;
-        height: 0.25rem;
-        line-height: 0.25rem;
-      }
-
-      &:hover{
-        background: rgba($color: #fff, $alpha: .5);
-      }
-    }
-  }
-  .doctor{
-    background: linear-gradient(45deg, rgb(96,160,250), rgb(230, 230, 230));
-  }
-}
-// noteBox
-.noteBox{
+  height: 1rem;
+  font-size: .36rem;
+  font-weight: 666;
+  margin-top: 10 rpx;
+  line-height: 1rem;
+  background: $bg;
   position: relative;
-  min-height: 3rem;
-  font-size: .26rem;
-  // margin: 0 auto .3rem auto;
-  
+  color: rgb(151, 151, 151);
 
-  .medical .comment-pic{
-    background: linear-gradient(45deg, rgb(191,213,252), rgb(230, 230, 230));
-  }
-  .hospital .comment-pic{
-    background: linear-gradient(45deg, rgb(156,222,255), rgb(230, 230, 230));
-  }
-  .weight .comment-pic{
-    background: linear-gradient(45deg, rgb(140,229,227), rgb(230, 230, 230));
+  &-text {
+    width: 28%;
+    text-align: center;
+    background: $bg;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
   }
 
-  .content{
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 34%;
+    height: 4 rpx;
+    background: #ccc;
+  }
+
+  // headBox
+  .headBox {
+    width: 100%;
     background: #fff;
-    height: 1.9rem;
-    line-height: 1.9rem;
+    height: 2.6rem;
+    line-height: 2.6rem;
     display: flex;
+    flex-wrap: nowrap;
     overflow: hidden;
+    box-sizing: border-box;
+    align-items: center;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
 
-    .comment-pic{
+    .judge, .doctor {
+      background: linear-gradient(45deg, rgb(26, 222, 224), rgb(230, 230, 230));
+      flex: 1;
+      width: 35%;
+      line-height: 2.08rem;
+      margin: 0 .5rem;
+      height: 2.08rem;
+      border-radius: 25 rpx;
+      overflow: hidden;
       position: relative;
-      height: 1rem;
-      width: 1rem;
-      line-height: 1rem;
-      border-radius: 50%;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      img{
-        height: 50%;
-        width: 50%;
+
+      img {
+        width: .6rem;
+        height: 0.6rem;
         position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      &-text {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        height: 100%;
+        overflow: hidden;
+
+        div {
+          width: 100%;
+          font-size: .36rem;
+          font-weight: 666;
+          height: 0.5rem;
+          line-height: .5rem;
+          overflow: hidden;
+          margin-top: .88rem;
+        }
+
+        span {
+          font-size: .20rem;
+          display: inline-block;
+          height: 0.25rem;
+          line-height: 0.25rem;
+        }
+
+        &:hover {
+          background: rgba($color: #fff, $alpha: .5);
+        }
+      }
+    }
+
+    .doctor {
+      background: linear-gradient(45deg, rgb(96, 160, 250), rgb(230, 230, 230));
+    }
+  }
+
+  // noteBox
+  .noteBox {
+    position: relative;
+    min-height: 3rem;
+    font-size: .26rem;
+    // margin: 0 auto .3rem auto;
+
+
+    .medical .comment-pic {
+      background: linear-gradient(45deg, rgb(191, 213, 252), rgb(230, 230, 230));
+    }
+
+    .hospital .comment-pic {
+      background: linear-gradient(45deg, rgb(156, 222, 255), rgb(230, 230, 230));
+    }
+
+    .weight .comment-pic {
+      background: linear-gradient(45deg, rgb(140, 229, 227), rgb(230, 230, 230));
+    }
+
+    .content {
+      background: #fff;
+      height: 1.9rem;
+      line-height: 1.9rem;
+      display: flex;
+      overflow: hidden;
+
+      .comment-pic {
+        position: relative;
+        height: 1rem;
+        width: 1rem;
+        line-height: 1rem;
+        border-radius: 50%;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-      }
-      &:hover{
-        background: rgba($color: rgb(151, 151, 151), $alpha: .5);
-      }
-    }
 
-    .medical, .hospital,.weight{
-      height: 1.6rem;
-      text-align: center;
-      flex: 2;
-      display: flex;    
-      flex-direction: column;
-      justify-content:space-around;
-      overflow: hidden;
-      margin: 0 auto;
+        img {
+          height: 50%;
+          width: 50%;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
 
-      span{
-        height: .3rem;
-        line-height: .3rem;
-        width: 100%;
-        margin-top: .39rem;
-        display: block;
-        color: rgb(151, 151, 151);
+        &:hover {
+          background: rgba($color: rgb(151, 151, 151), $alpha: .5);
+        }
       }
+
+      .medical, .hospital, .weight {
+        height: 1.6rem;
+        text-align: center;
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        overflow: hidden;
+        margin: 0 auto;
+
+        span {
+          height: .3rem;
+          line-height: .3rem;
+          width: 100%;
+          margin-top: .39rem;
+          display: block;
+          color: rgb(151, 151, 151);
+        }
+      }
+
     }
-    
   }
-}
 
-.emotionBox{
-  min-height: 5rem;
-  .mp-echarts {
-    width: 100%;
-    height: 5rem;
-    &.twos{
-      height: 8rem;
+  .emotionBox {
+    min-height: 5rem;
+
+    .mp-echarts {
+      width: 100%;
+      height: 5rem;
+
+      &.twos {
+        height: 8rem;
+      }
     }
   }
 }

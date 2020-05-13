@@ -6,9 +6,10 @@
           <div class="receiving_box">
             <div class="receiving_information">
               <span></span>
-              <img src="../../../static/images/system_info.png" alt="">
+              <img src="../../../static/images/2.jpg" alt="">
               <span>解忧秒新人用户名</span>
               <img  class="small" src="../../../static/images/small.png" alt="">
+              <span>存入草稿箱</span>
             </div>
           </div>
           <div class="receiving_img">
@@ -18,7 +19,7 @@
                   <p>2020.4.21</p>
                 </div>
                 <div class="left">
-                  <img src="../../../static/images/system_info.png" alt="">
+                  <img src="../../../static/images/2.jpg" alt="">
                 </div>
               </div>
               <div class="cover">
@@ -31,9 +32,9 @@
             <div class="receiving_box">
               <div class="receiving_information">
                 <span></span>
-                <img src="../../../static/images/system_info.png" alt="">
+                <img src="../../../static/images/2.jpg" alt="">
                 <span>解忧秒新人用户名</span>
-                <img  class="small" src="../../../static/images/small.png" alt="">
+                <img  class="small" src="../../../static/images/2.jpg" alt="">
               </div>
             </div>
             <div class="receiving_img">
@@ -43,7 +44,7 @@
                   <p>2020.4.21</p>
                 </div>
                 <div class="left">
-                  <img src="../../../static/images/system_info.png" alt="">
+                  <img src="../../../static/images/2.jpg" alt="">
                 </div>
               </div>
               <div class="cover">
@@ -54,23 +55,31 @@
           </div>
         </van-tab>
         <van-tab title="寄信箱">
-          <div class="post_letter">
-            <div class="post_letterBox">
-              <span>
-                亲爱的 忘忧草：
-              </span>
-              <p class="conent">
-                内容一
-                Vant Weapp 是移动端 Vue 组件库 Vant 的小程序版本，两者基于相同的视觉规范
-                ，提供一致的 API 接口，助力开发者快速搭建小程序应用。Vant Weapp 是移动端 Vue
-                组件库 Vant 的小程序版本，两者基于相同的视觉规范，提供一致的 API 接口，助力
-                开发者快速搭建小程序应用。Vant Weapp 是移动端 Vue 组件库 Vant 的小程序版本
-                ，两者基于相同的视觉规范，提供一致的 API 接口，助力开发者快速搭建小程序应用。
-                Vant Weapp 是移动端 Vue 组件库 Vant 的小程序版本，
-                两者基于相同的视觉规范，提供一致的 API 接口，助力开发者快速搭建小程序应用。
-                Vant Weapp 是移动端 Vue 组件库 Vant 的小程序版本，
-              </p>
-            </div>
+          <div class="post_letterBox">
+            <div class="post_box">
+                <div class="receiving_information">
+                  <span></span>
+                  <img src="../../../static/images/2.jpg" alt="">
+                  <span>解忧秒新人用户名</span>
+                  <img  class="small" src="../../../static/images/small.png" alt="">
+                  <span>存入草稿箱</span>
+                </div>
+              </div>
+            <div class="post_img">
+                <div class="content_font">
+                  <div class="right">
+                    <p><span>To:</span>用户名</p>
+                    <p>2020.4.21</p>
+                  </div>
+                  <div class="left">
+                    <img src="../../../static/images/2.jpg" alt="">
+                  </div>
+                </div>
+                <div class="cover">
+                  <div class="box1"></div>
+                  <div class="box2"></div>
+                </div>
+              </div>
           </div>
         </van-tab>
       </van-tabs>
@@ -81,7 +90,7 @@
     export default {
         data () {
             return {
-                active:'0',
+                active:'0'
             }
         },
         methods: {
@@ -99,6 +108,8 @@
     display:flex;
     flex-direction:column;
     .receiving{
+      width:90%;
+      margin: auto;
       border-top: 1px solid #f5f5f5;
       border-bottom: 0.5px solid #f5f5f5;
       height:5.8rem;
@@ -173,23 +184,4 @@
 
   }
 
-
-
-
-
-
-  /*.receiving,.post_letter{*/
-  /*  width:100%;*/
-  /*  height:1500rpx;*/
-  /*  background-image:url('http://puxiugd.com/d/file/2016/12/04/1c8699f4ed97fed62c3eef32dc5b65fd.jpg');*/
-  /*  background-size: 100% 100%;*/
-  /*}*/
-  /*.receiving_box{*/
-  /*  position: relative;*/
-  /*  width:80%;*/
-  /*  margin:auto;*/
-  /*  height:1000rpx;*/
-  /*  top:15%;*/
-  /*  border:1rpx solid pink;*/
-  /*}*/
 </style>

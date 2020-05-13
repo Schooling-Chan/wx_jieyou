@@ -9,7 +9,7 @@
     },
     "miniprogramRoot": "dist/wx/",
     "compileType": "miniprogram",
-    "appid": "touristappid",
+    "appid": "wx0c4e86369f7b3f33",
     "projectname": "jie_you",
     "condition": {
         "search": {
