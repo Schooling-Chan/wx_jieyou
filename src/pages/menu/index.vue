@@ -20,7 +20,7 @@
         <div class="writeBox-content-special">
           <div class="hletter">
             <div class=" iconhuixin iconfont"></div>
-            <span class="wletter-title">回信</span>
+            <span class="wletter-title">信箱</span>
           </div>
           <div class="questions" @click="goSearch">
             <div class=" iconjieda iconfont"></div>
@@ -43,102 +43,25 @@
           <scroll-view class='scroll-view-list'  style="height: 100%; width: 100%" scroll-y="true"  scroll-x="false" scroll-with-animation @scroll="scrollH" :throttle="false">
             <!-- 热门帖子 -->
             <div class="invitationBox">
-              <div class="title"><div class="title-text">热门动态</div></div>
+              <div class="title"><div class="title-text">最新动态</div></div>
               <div class="invitation">
-                <a class="invitation-persons" @click='goPage' data-id="2222">
+                <a class="invitation-persons" v-for="(item,index) in dataList" :key="index" @click='goPage' :data-id="item.id" >
                   <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00 </div>
-                    <!-- <div class="iconfont icong">1110</div> -->
+                    <img :src="item.user.avatarUrl" alt="头像" class="perImg">
+                    <span>{{item.user.nickname}}</span>
+                    <div class="time">{{item.gmtCreate}}</div>
+                    <div class="iconfont1 iconlook number">{{item.viewCount}}</div>
                   </div>
                   <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-                    目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-                    学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-                    加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
+                    <div class="details">{{item.content}}
                     </div>
                   </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">55</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </a>
-                <a class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00</div>
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业
-                    </div>
+                  <div :class="{'picBox':item.pictureUrls} +' clearfix'">
+                    <img :src="imgs" alt="" v-for="(imgs,key) in item.pictureUrls" :key="key">
                   </div>
                   <div class="footer">
-                    <div class="give iconfont icond">99+</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </a>
-                <a class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00 </div>
-                    <!-- <div class="iconfont icong">1110</div> -->
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-                    目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-                    学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-                    加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                    </div>
-                  </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">55+</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </a>
-                <a class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00 </div>
-                    <!-- <div class="iconfont icong">1110</div> -->
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-                    目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-                    学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-                    加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                    </div>
-                  </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">55+</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </a>
-                <a class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00 </div>
-                    <!-- <div class="iconfont icong">1110</div> -->
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-                    目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-                    学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-                    加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                    </div>
-                  </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">55+</div>
-                    <div class="comment iconfont iconc">55</div>
+                    <div :class="'give iconfont icond '+ {'iconliked':item.isLike}" @click="isLike">{{item.likeCount > 99 ? '99+' : item.likeCount}}</div>
+                    <div class="comment iconfont iconc">{{item.commentCount > 99 ? '99+' : item.commentCount}}</div>
                   </div>
                 </a>
               </div>
@@ -149,64 +72,8 @@
           <scroll-view style="height: 100%; width: 100%" scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
             <!-- 热门帖子 -->
             <div class="invitationBox">
-              <div class="title"><div class="title-text">最新动态</div></div>
+              <div class="title"><div class="title-text">热门动态</div></div>
               <div class="invitation">
-                <div class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00 </div>
-                    <!-- <div class="iconfont icong">1110</div> -->
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-                    目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-                    学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-                    加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                    </div>
-                  </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">55</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </div>
-                <div class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00</div>
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业
-                    </div>
-                  </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">99+</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </div>
-                <div class="invitation-persons">
-                  <div class="invitation-persons-head">
-                    <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-                    <span>心猿意马</span>
-                    <div class="time">2020-01-02 18:00:00 </div>
-                    <!-- <div class="iconfont icong">1110</div> -->
-                  </div>
-                  <div class="invitation-persons-content">
-                    <div class="invitation-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-                    <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-                    目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-                    学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-                    加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                    </div>
-                  </div>
-                  <div class="footer">
-                    <div class="give iconfont icond">55+</div>
-                    <div class="comment iconfont iconc">55</div>
-                  </div>
-                </div>
               </div>
             </div>
           </scroll-view>
@@ -218,7 +85,7 @@
 </template>
 
 <script>
-
+import $http from '../../../static/plugins/ajax';
 
 export default {
   data:{
@@ -231,10 +98,10 @@ export default {
     tabIndex:0,
     changeClass:'dynamicBox',
     temp:null,
-    dataList:{}
+    dataList:[],
   },
   methods:{
-    getHeight:function(ele){
+    getHeight:function(ele){//获取高度
       let query = wx.createSelectorQuery(),
       that = this;
       for (const key in ele) {
@@ -249,24 +116,24 @@ export default {
         }
       
     },
-    changeTab(e){
+    changeTab(e){//左右滑动
       this.tabIndex = e.currentTarget.dataset.id * 1;
     },
-    pageChange(e){
+    pageChange(e){//点击左右变化
       let _this = this;
   
       if ("touch" === e.mp.detail.source) {
           this.tabIndex = e.target.current;
       }
     },
-    goPage(e){
+    goPage(e){//进入详情页面
       let id = e.currentTarget.dataset.id;
       wx.navigateTo({url:"../content/main?id=" + id});
     },
-    goSearch(e){
+    goSearch(e){//进入搜索页面
       wx.navigateTo({url:"../search/main" });
     },
-    scrollH(e) {
+    scrollH(e) {//滑动进入查看动态
       let scrollTop = e.mp.detail.scrollTop;
       if(this.temp === null){
         this.temp = this.allHeight.dynamicBox;
@@ -287,6 +154,18 @@ export default {
   },
   mounted:function(e){
     this.allHeight.dynamicBox = this.wHeight - this.allHeight.searchBox - this.allHeight.writeBox;
+    let _this = this;
+    ///jieyou/api/liveMessage/latest
+    $http.myAxios({
+      url:'/jieyou/api/liveMessage/latest',
+      data:{
+        'pageNum':1,
+        'pageSize':10
+      }
+    }).then(results=>{
+      _this.dataList = results.object;
+      console.log(_this.dataList);
+    })
   },
 }
 </script>
@@ -310,31 +189,15 @@ $padding: 0 .2rem;
     line-height: 1rem;
     background: $bg;
     position: relative;
-    // color: rgb(151, 151, 151);
     &-text {
         width: 28%;
-        // text-align: center;
         background: $bg;
         position: absolute;
         left: 0;
         top: 0;
         right: 0;
         bottom: 0;
-        // margin: auto;
     }
-    /* &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        width: 34%;
-        height: 4rpx;
-        background: #ccc;
-    } */
 }
 
 //search
@@ -518,6 +381,12 @@ $padding: 0 .2rem;
   }
 }
 
+.clearfix::after{
+  content: '';
+  display: block;
+  clear: both;
+}
+
 //invitationBox
 .invitationBox{
   padding: $padding;
@@ -563,6 +432,18 @@ $padding: 0 .2rem;
           left: 18%;
           color: rgba($color: #000, $alpha: .5);
         }
+        .number{
+          color: #B8B8B8;
+          height: 55rpx;
+          line-height: 55rpx;
+          font-size: .28rem;
+          transform: translate(38%,90%);
+        }
+        .iconlook::before{
+          font-size: 40rpx;
+          height: 40rpx;
+          width: 40rpx;
+        }
       }
 
       &-content{
@@ -571,12 +452,7 @@ $padding: 0 .2rem;
         flex-direction: column;
         // text-align: center;
         padding: .2rem .2rem 0 .2rem;
-        min-height: 2.5rem;
-        &-title{
-          font-size: .35rem;
-          color: #69C8BB;
-          overflow-y: hidden;
-        }
+        min-height: 1.5rem;
         .details{
           font-size: .3rem;
           overflow: hidden;
@@ -590,6 +466,23 @@ $padding: 0 .2rem;
           color: rgb(117,122,125);
         }
         
+      }
+      .picBox{
+        // display: flex;
+        width: 100%;
+        // flex-wrap: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+        // align-items: center;
+        height: 2rem;
+        margin: .2rem auto;
+        img{
+          // flex:1;
+          height: 100%;
+          float: left;
+          width: 30%;
+          margin-left: .2rem;
+        }
       }
       .footer{
         height: 0.5rem;

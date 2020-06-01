@@ -44,6 +44,9 @@
     <!-- 情绪统计 -->
     <div class="emotionBox">
       <div class="title"><div class="title-text">情绪统计</div></div>
+      <div class="details">
+        <span v-for="(item,key) in moods" :key="key">{{key}}:{{item}}</span>
+      </div>
       <div class="mp-echarts">
        <mpvue-echarts :echarts="echarts" :onInit="initChart"/>
       </div>
@@ -99,13 +102,13 @@ function baseEcharts( canvas, width, height, options = {
             lineStyle: {
                 type: 'dashed'
             }
-        }
+        },
     },
     series: [{
         name: '心情指数',
         type: 'line',
         smooth: true,
-        data: [18, 36, 65, 30, 78, 40, 33]
+        data: [18, 98, 65, 30, 78, 40, 33]
     }]
 }) {
     const chart = echarts.init(canvas, null, {
@@ -138,18 +141,16 @@ export default {
               }
           },
           color:["#7DC2E6"],
-          legend: {
-              data: ['体重指数']
-          },
           xAxis: {
             type: 'category',
             data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
           },
           yAxis: {
-              type: 'value'
+            type: 'value',
+            name: '体重(kg)',
           },
           series: [{
-              data: [120, 200, 150, 80, 70, 110, 130],
+              data: [120, 180, 150, 80, 70, 110, 130],
               type: 'bar'
           }]
         });
@@ -159,13 +160,13 @@ export default {
           backgroundColor: '#fff',
           color:['#37a2da', '#32c5e9'],
           legend: {
-              data: ['体重指数', '心情指数']
+            data: ['心情指数','体重']
           },
           xAxis: [
-              {
-                  type: 'category',
-                  data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-              }
+            {
+              type: 'category',
+              data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            }
           ],
            yAxis: [
               {
@@ -204,6 +205,13 @@ export default {
               }
           ]
         });
+      },
+      moods:{
+        20: '生气，',
+        40: '伤心，',
+        60: '平静，',
+        80: '开心，',
+        100: '兴奋',
       }
     }
   },
@@ -461,6 +469,14 @@ $bg:#f0f0f0;
 
 .emotionBox{
   min-height: 5rem;
+  .details{
+    font-size: .3rem;
+    background: #fff;
+    text-align: center;
+    height: 1rem;
+    line-height: 1rem;
+    color: #BEBEBE;
+  }
   .mp-echarts {
     width: 100%;
     height: 5rem;

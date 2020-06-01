@@ -11,17 +11,9 @@
     <section class="dragBox">
       <div class="dragBox_title">吃药记录</div>
       <div class="dateBox">
-        <div class="timeBox">
-          <view class="section_title">早上用量:</view>
-          <input type="number" :value="drag.morningDosage" data-date='morning' class="section_weight timeDrag" @change="bindDateChange">
-        </div>
-        <div class="timeBox">
-          <view class="section_title">中午用量:</view>
-          <input type="number" :value="drag.noonDosage" data-date='noon' class="section_weight timeDrag" @change="bindDateChange">
-        </div>
-        <div class="timeBox">
-          <view class="section_title">晚上用量:</view>
-          <input type="number" :value="drag.eveningDosage" data-date='evening' class="section_weight timeDrag" @change="bindDateChange">
+        <div class="timeBox" v-for="(item, index) in date" :key="index">
+          <view class="section_title">{{item.des}}</view>
+          <input type="number" value="0" :data-date='item.id' class="section_weight timeDrag" @change="bindDateChange">
         </div>
       </div>
       <div class="dragTypeBox">
@@ -53,8 +45,21 @@ export default {
     },
     weight: "60",
     dataList:null,
-    index: 0
-
+    index: 0,
+    date:[
+      {
+        des:'早上用量:',
+        id:'morning',
+      },
+      {
+        des:'中午用量:',
+        id:'noon',
+      },
+      {
+        des:'晚上用量:',
+        id:'evening',
+      }
+    ]
   },
   methods:{
     bindDateChange: function(e) {
@@ -80,9 +85,11 @@ export default {
     },
     bindPickerChange: function (e) {
       // console.log('picker发送选择改变，携带值为', e.mp)
-      this.index = e.mp.detail.value;
+      return this.index = e.mp.detail.value;
     },
     postAll(e){
+      console.log(this.drag);
+      
       let _this = this;
       Promise.all([$http.myAxios({
           url:`/jieyou/api/weight/${_this.weight}`,
@@ -96,13 +103,14 @@ export default {
           }                    
         }),$http.myAxios({
           url:'/jieyou/api/medicineRecord',
+          method:'post',
           data:{
-            'medicineRecords':{
-              medicineIndex : parseInt(_this.index),
-              noonDosage: _this.drag.noonDosage,
-              eveningDosage: _this.drag.eveningDosage,
-              morningDosage: _this.drag.morningDosage,
-            }
+            'medicineRecords':[{
+              'medicineIndex' : parseInt(_this.index),
+              'noonDosage': _this.drag.noonDosage,
+              'eveningDosage': _this.drag.eveningDosage,
+              'morningDosage': _this.drag.morningDosage,
+            }]
           },
           method:'post'
     })]).then(res => {
@@ -125,7 +133,11 @@ export default {
       throw new Error("连接有问题！")
     }).catch(err=>{
       console.log(err);
-      
+      mpvue.showToast({
+        title: err, // 标题
+        icon: 'success',  // 图标类型，默认success
+        duration: 1500 , // 提示窗停留时间，默认1500ms
+      });
     })
     }
   },

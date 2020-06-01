@@ -1,10 +1,11 @@
 {
     "pages": [
-        "pages/menu/main",
         "pages/index/main",
         "pages/mood/main",
-        "pages/record/main",
+        "pages/menu/main",
+        "pages/search/main",
         "pages/content/main",
+        "pages/record/main",
         "pages/comments_detail/main",
         "pages/search_details/main",
         "pages/center/main",
@@ -12,8 +13,7 @@
         "pages/mailbox_detail/main",
         "pages/profile_detail/main",
         "pages/system_detail/main",
-        "pages/drawLetter_detail/main",
-        "pages/search/main"
+        "pages/drawLetter_detail/main"
     ],
     "window": {
         "backgroundTextStyle": "dark",

@@ -1,4 +1,4 @@
-let baseURL = 'http://182183.xyz:40001/mock/23';
+let baseURL = 'http://182183.xyz:9000';
 
 module.exports.myAxios = function(arg) {
 
@@ -7,7 +7,7 @@ module.exports.myAxios = function(arg) {
             data = {},
             header = {
                 'content-type': 'application/json', // 默认值
-                "token": "a4a3e938-59e0-39e0-ad6f-601f29c2e2d9"
+                "token": "3fa8944e-6bc4-354e-b250-65fb40e5fcc1"
             },
             method = 'get',
             dataType = 'json'

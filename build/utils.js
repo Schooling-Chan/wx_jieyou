@@ -28,7 +28,7 @@ exports.cssLoaders = function(options) {
         loader: 'sass-resources-loader',
         options: {
             resources: [
-                path.resolve(__dirname, '../src/assets/variables.scss'),
+                path.resolve(__dirname, '../src/assets/style.scss'),
             ]
         }
     }

@@ -1,143 +1,232 @@
 <template>
   <div class="mainBox">
     <!-- 动态 -->
-    <div class="articleBox">
+    <div class="articleBox"  >
       <div class="article-persons-head">
-        <img src="../../../static/images/1.jpg" alt="头像" class="perImg">
-        <span>心猿意马</span>
-        <div class="time">2020-01-02 18:00:00 </div>
+        <img :src="dataContent.user.avatarUrl" alt="头像" class="perImg" >
+        <span>{{dataContent.user.nickname}}</span>
+        <div class="time">{{dataContent.gmtCreate}}</div>
       </div>
       <div class="article-persons-content">
-        <div class="article-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-        <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-        目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-        学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-        加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-        目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-        学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-        加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
+        <div class="details">{{dataContent.content}}
+        </div>
+        <div class="picBox">
+          <img :src="imgs" alt="" v-for="(imgs,key) in dataContent.pictureUrls" :key="key">
         </div>
       </div>
-      <div class="footer" @click="startThings">
-        <div class="give iconfont icond" data-choose="like">{{likenum > 99 ? '99+' : likenum}}</div>
-        <div class="comment iconfont iconc" data-choose="comment">55</div>
+      <div class="footer" @click="startThings" :data-user="dataContent.user.userId">
+        <div :class="'give iconfont icond '+ {'iconliked':liked}" data-choose="like">{{likenum > 99 ? '99+' : likenum}}</div>
+        <div class="comment iconfont iconc" data-choose="comment" >{{commentsCount > 99 ? '99+' : commentsCount}}</div>
       </div>
     </div>
     <!-- 文章 -->
     <div class="commentBox">
-      <div class="title">评论(55)</div>
-      <div class="commentList">
-          <div class="comments">
+      <div class="title iconComments iconfont1" @click="showComments">评论({{commentsCount}})</div>
+      <div :class="'commentList '+ comments">
+          <div class="comments" v-for="(item,index) in dataComments" :key="index" :id="item.id">
             <div class="head">
-              <img src="../../../static/images/2.jpg" alt="头像" class="perImg">
-              <span>心猿意马</span>
+              <img :src="item.user.avatarUrl" alt="头像" class="perImg">
+              <span>{{item.user.nickname}}</span>
+              <span :class="'hidden ' + {'label':item.user.role}">暖心师</span>
             </div>
             <div class="content">
-              目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-              目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-              学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-              加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
+              {{item.content}}
             </div>
-            <footer class="footer" @click="startComment">
-              <div class="comment iconfont iconc" >55</div>
+            <footer class="footer" @click="startComment" :data-user="item.user.userId" :data-parents="item.id">
+              <div class="comment iconfont iconc" >{{item.replyCount}}</div>
             </footer>
-            <div class="answerList">
-              <div class="answers" data-user="555">
+            <div class="answerList" >
+              <div class="answers"   v-for="(sec,key) in test[item.id]" :key="key" :v-if="(item.replyCount > 0)" @click="startComment" :data-user="sec.user.userId" :data-parents="item.id">
                 <div class="nameHead">
-                  <span>555</span>
+                  <span>{{sec.user.nickname}}</span>
                   回复
-                  <span>666</span>
+                  <span>{{sec.replyUserNickname}}</span>
                 </div>
                 <div class="details">
-                  套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                </div>
-              </div>
-              <div class="answers">
-                <div class="nameHead">
-                  <span>555</span>
-                  回复
-                  <span>666</span>
-                </div>
-                <div class="details">
-                  套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-                </div>
-              </div>
-              <div class="answers">
-                <div class="nameHead">
-                  <span>555</span>
-                  回复
-                  <span>666</span>
-                </div>
-                <div class="details">
-                  套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
+                  {{sec.content}}
                 </div>
               </div>
             </div>
-          </div>
-          <div class="comments">
-            <div class="head">
-              <img src="../../../static/images/2.jpg" alt="头像" class="perImg">
-              <span>心猿意马</span>
-            </div>
-            <div class="content">
-              目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-              目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-              学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-              加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-            </div>
-            <footer class="footer">
-              <div class="comment iconfont iconc">55</div>
-            </footer>
-            
-          </div>
-          <div class="comments">
-            <div class="head">
-              <img src="../../../static/images/2.jpg" alt="头像" class="perImg">
-              <span>心猿意马</span>
-            </div>
-            <div class="content">
-              目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-              目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-              学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-              加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
-            </div>
-            <footer class="footer">
-              <div class="comment iconfont iconc">55</div>
-            </footer>
           </div>
       </div>
     </div>
     <!-- 评论 -->
     <div class="discussBox">
-      <textarea name="" id="dicuss" placeholder="我要评论" fixed="true" :focus="dicussShow" cursor-spacing="10" @blur="dicussLeft"></textarea>
-      <button class="postBtn">发送</button>
+      <textarea name="" id="dicuss" placeholder="我要评论" fixed="true" :focus="dicussShow" cursor-spacing="10" @blur="dicussLeft" @input="discussInput" maxlength="200" :value="replyContent"></textarea>
+      <button class="postBtn" @click="postComments">发送</button>
     </div>
   </div>
 </template>
 
 <script>
+import $http from '../../../static/plugins/ajax';
 
 export default {
   data:{
     dicussShow:false,
-    likenum: 100
+    commentsCount: 100,//动态总数
+    comments:'hidden',//点击显示评论
+    dataContent:{},//动态详情
+    liveMessageId:null,//动态id
+    dataComments:null,//评论数据
+    check:false,//节流阀
+    secondComments:{},//二级评论
+    replyId:null,//回复者
+    replyContent:null,
+    replyParent:null,
+    test:null,
+    liked:null,//记录like值
+    likenum:null//记录like数量
   },
   methods:{
     startThings(e){
-      console.log(e.mp.target.dataset.choose);
+      // console.log(e.mp.target.dataset.choose);
       let choose = e.mp.target.dataset.choose;
-      choose === "comment" ? this.startComment() : (choose === "like" ? this.likenum++ : null);
+      choose === "comment" ? this.startComment(e) : (choose === "like" ? this.changeLike() : null);
     },
-    startComment(e){
+    changeLike(e){
+      let _this = this;
+      if(this.liked){
+        $http.myAxios({
+          url:'/jieyou/api/like/liveMessage/'+ this.liveMessageId,
+          header : {
+              'content-type': 'application/x-www-form-urlencoded',
+              "token": "3fa8944e-6bc4-354e-b250-65fb40e5fcc1"
+          },
+          method:'delete'
+        }).then(res=>{
+          console.log(res);
+          this.liked = false
+          this.likenum--;
+        }).catch(err=>{
+          console.log(err);
+        });
+        return;
+      }
+      $http.myAxios({
+          url:'/jieyou/api/like/liveMessage/'+ this.liveMessageId,
+          header : {
+              'content-type': 'application/x-www-form-urlencoded',
+              "token": "3fa8944e-6bc4-354e-b250-65fb40e5fcc1"
+          },
+          method:'post'
+        }).then(res=>{
+          console.log(res);
+          this.liked = true
+          this.likenum++;
+        }).catch(err=>{
+          console.log(err);
+        });
+    },
+    startComment(e){//聚焦评论框
+      // console.log(e);
+      this.replyParent = e.currentTarget.dataset.parents;
+      this.replyId = e.currentTarget.dataset.user;
+      // this.liveMessageId = e.currentTarget.dataset.user;
       return this.dicussShow = true;
     },
     dicussLeft(e){
+      // console.log(e);
       return this.dicussShow = false;
+    },
+    discussInput(e){
+      this.replyContent = e.target.value;
+    },
+    showComments(e){//显示评论
+      let _this = this;
+      if(this.check) {
+        this.comments = this.comments === 'show' ? 'hidden' : 'show';
+        return;
+      }
+      
+      $http.myAxios({
+        url:'/jieyou/api/comment/liveMessage/'+ _this.liveMessageId
+      }).then(res=>{
+        return _this.dataComments = res.object.reverse();
+      }).then( res=>{
+        // console.log(res);
+        res.forEach(async (item,index)=>{
+          return await this.loadData(item.id);
+        })
+      }).then( res=>{
+        let time = setTimeout(()=>{
+          clearInterval(time);
+          _this.test = _this.secondComments;
+          _this.secondComments = null;
+          this.comments = this.comments === 'show' ? 'hidden' : 'show';
+          this.check = true;
+          // console.log(_this.test);
+        },1000)
+        
+      });
+    },
+     loadData(commentId){//获取二级评论
+      let _this = this;
+       $http.myAxios({//获取内容
+        url:'/jieyou/api/comment/' + commentId + '/subComment',
+        data:{
+          commentId
+        }
+      }).then(res=>{
+        _this.secondComments[commentId] = (res.object);
+        // console.log(typeof commentId);
+        
+        // _this.secondCommentscommentId = res.object;
+        //  return res.object;
+
+        // console.log(res.object);
+        // _this.commentsCount = _this.dataContent.commentCount
+      }).catch(err=>{
+        console.log(err);
+      });
+    },
+    postComments(e){//提交评论数据
+      // console.log(this.liveMessageId,this.replyParent,);
+      let _this = this;
+      this.replyId = this.replyId || null;
+      this.replyParent = this.replyParent || null;
+      $http.myAxios({
+        url:'/jieyou/api/comment/liveMessage',
+        method:'post',
+        data:{
+          content: _this.replyContent,
+          liveMessageId:_this.liveMessageId,
+          replyUserId: _this.replyId,
+          parentId:_this.replyParent
+        }
+      }).then(res=>{
+        console.log(res);
+        _this.replyContent = null;
+        _this.commentsCount++;
+      }).catch(err=>{
+        console.log(err);
+      })
     }
   },
-  onLoad(e){
-    let id = e.id;
-    console.log(e);
+  onLoad(e){//加载数据
+    this.liveMessageId = e.id;
+    let _this = this;
+    $http.myAxios({//获取内容
+      url:'/jieyou/api/liveMessage/'+this.liveMessageId,
+    }).then(res=>{
+      _this.dataContent = res.object;
+      // console.log( _this.dataContent);
+      _this.commentsCount = _this.dataContent.commentCount;
+      _this.liked = _this.dataContent.isLike;
+      _this.likenum = _this.dataContent.likeCount;
+    }).catch(err=>{
+      console.log(err);
+    })
+  },
+  onPullDownRefresh(e){
+    this.check = false;
+    this.secondComments = {};
+    let time = setTimeout(async ()=>{
+      clearInterval(time);
+      await this.showComments();
+      wx.hideNavigationBarLoading();
+    },1000);
+
   }
 }
 </script>
@@ -146,6 +235,14 @@ export default {
 @import url('../../../static/fonts/invitation/index.css');
 
 $padding: .2rem;
+
+.show{
+  display: block;
+}
+
+.hidden{
+  display: none;
+}
 
 .mainBox {
     font-size: 100rpx;
@@ -236,7 +333,14 @@ $padding: .2rem;
           margin-top: .2rem;
           color: rgb(117,122,125);
         }
-        
+        .picBox{
+          margin: $padding 0;
+          img{
+            height: 2rem;
+            width: 30%;
+            margin-left: $padding;
+          }
+        }
       }
       
     }
@@ -266,12 +370,20 @@ $padding: .2rem;
         height: .8rem;
         line-height: 0.8rem;
         span{
-          position: absolute;
+          position: relative;
           left: 15%;
-          top: 50%;
+          // top: 50%;
           transform: translateY(-50%);
           color: rgba($color: #000, $alpha: .8);
           font-size: .25rem;
+        }
+        .label{
+          display: inline;
+          border: 1px solid #CCD63A;
+          left: 20%;
+          border-radius: .25rem;
+          padding: .05rem;
+          color: #CCD63A;
         }
       }
       .content{
@@ -315,6 +427,7 @@ $padding: .2rem;
   background: #fff;
   z-index: 100;
   width: 100%;
+  border-top: 2rpx solid #d7d7d7;
   .postBtn{
     background: #00B26A;
     color: #fff;

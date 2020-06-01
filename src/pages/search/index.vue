@@ -6,47 +6,24 @@
       <input placeholder="搜索内容"  name="search" @focus="change" data-id='0' :style="{color:inputColor}" confirm-type='search' v-model="keyword" @confirm="confirm"/>
     </div>
     <div class="cardBox" >
-      <div class="cardList" @click="godetails" data-id="555">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div>
-      <div class="cardList">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div>
-      <div class="cardList">
-        <div class="title">什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div>
-      <div class="cardList">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div>
-      <div class="cardList">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div>
-<div class="cardList">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div><div class="cardList">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
-      </div><div class="cardList">
-        <div class="title">什么是抑郁症</div>
-        <div class="iconfont iconlook number">555</div>
+      <div class="cardList" @click="godetails" v-for="(item, index) in dataList" :key="index" :data-id="item.id">
+        <div class="title">{{item.question}}</div>
+        <div class="content" ><span v-html="item.answer">{{item.answer}}</span></div>
+        <div class="iconfont1 iconlook number">{{item.helpfulCount}}</div>
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import $http from '../../../static/plugins/ajax';
 
 export default {
   data:{
     wHeight:null,
     height:null,
-    inputColor:'#CECECE'
+    inputColor:'#CECECE',
+    dataList:null,
   },
   methods:{
     navback() {
@@ -57,6 +34,17 @@ export default {
     },
     confirm(e) {
       console.log(e.target.value);
+      $http.myAxios({
+        url:'/jieyou/api/faq/help',
+        data:{
+          question:e.target.value
+        }
+      }).then(res=>{
+        console.log(res);
+        this.dataList = res.object;
+      }).catch(err=>{
+        console.log(err);
+      })
     },
     godetails(e){
       let id = e.currentTarget.dataset.id;
@@ -71,6 +59,15 @@ export default {
         that.height = res.statusBarHeight;
       },
     });
+    $http.myAxios({
+      url:'/jieyou/api/faq/help',
+    }).then(res=>{
+      console.log(res);
+      this.dataList = res.object;
+    }).catch(err=>{
+      console.log(err);
+      
+    })
   }
 }
 </script>
@@ -155,13 +152,20 @@ $bg:#EFEFEF;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2; 
     }
+    .content{
+      margin: .24rem auto;
+      color: #757a7d;
+    }
     .number{
       color: #B8B8B8;
       height: 55rpx;
       line-height: 55rpx;
-      left: 14%;
+      font-size: .3rem;
+      // left: 14%;
       bottom: 8%;
+      transform: translateX(10%);
     }
+    
     &:hover{
       background: rgba(255, 255, 255, 0.3);
     }
