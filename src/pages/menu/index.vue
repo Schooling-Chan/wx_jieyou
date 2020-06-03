@@ -2,9 +2,9 @@
   <div class="mainBox">
     <!-- 搜索 -->
     <div class="searchBox">
-      <div class="inputBox" @click="goSearch">
+      <div class="inputBox" @click="goSearch" data-id="1">
         <text class="iconfont iconsearch"></text>
-        <div class="inputBox-tips">疑难解答</div>
+        <div class="inputBox-tips">搜索暖心师</div>
       </div>
     </div>
 
@@ -12,17 +12,17 @@
     <div class="writeBox">
       <div class="title"><div class="title-text">暖心时刻</div></div>
       <div class="writeBox-content">
-        <div class="writeBox-content-wletter">
+        <div class="writeBox-content-wletter" @click="goLetter" data-id="0">
           <div class=" iconxinfeng iconfont"></div>
           <div class="wletter-title">写信</div>
           <div class="wletter-tips">倾述你的烦恼，释放自己</div>
         </div>
         <div class="writeBox-content-special">
-          <div class="hletter">
+          <div class="hletter" @click="goLetter" data-id="1">
             <div class=" iconhuixin iconfont"></div>
-            <span class="wletter-title">信箱</span>
+            <span class="wletter-title">收信箱</span>
           </div>
-          <div class="questions" @click="goSearch">
+          <div class="questions" @click="goSearch" data-id="2">
             <div class=" iconjieda iconfont"></div>
             <span class="wletter-title">疑难解答</span>
           </div>
@@ -35,12 +35,12 @@
       <div class="menu">
         <scroll-view scroll-with-animation  scroll-y="true"  >
            <text @click="changeTab" :class="{'active': tabIndex == 0}" data-id="0">最新动态</text>
-           <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">热门动态</text>
+           <!-- <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">热门动态</text> -->
         </scroll-view>
       </div>
-      <swiper class="swiperBox" :current="tabIndex" @change="pageChange" ><!--:style="{height:allHeight.swiperBox +'px'}"-->
-        <swiper-item >
-          <scroll-view class='scroll-view-list'  style="height: 100%; width: 100%" scroll-y="true"  scroll-x="false" scroll-with-animation @scroll="scrollH" :throttle="false">
+      <swiper class="swiperBox" :current="tabIndex" @change="pageChange" >
+        <swiper-item :style="'height: 100%; overflow-X:hidden; '+{width: wWidth + 'px'}">
+          <scroll-view class='scroll-view-list'   scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
             <!-- 热门帖子 -->
             <div class="invitationBox">
               <div class="title"><div class="title-text">最新动态</div></div>
@@ -68,16 +68,15 @@
             </div>
           </scroll-view>
         </swiper-item>
-        <swiper-item>
+        <!-- <swiper-item>
           <scroll-view style="height: 100%; width: 100%" scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
-            <!-- 热门帖子 -->
             <div class="invitationBox">
               <div class="title"><div class="title-text">热门动态</div></div>
               <div class="invitation">
               </div>
             </div>
           </scroll-view>
-        </swiper-item>
+        </swiper-item> -->
       </swiper>
     </div>
 
@@ -90,6 +89,7 @@ import $http from '../../../static/plugins/ajax';
 export default {
   data:{
     wHeight:null,
+    wWidth:null,
     allHeight:{
       dynamicBox:null,
       searchBox:null,
@@ -99,6 +99,7 @@ export default {
     changeClass:'dynamicBox',
     temp:null,
     dataList:[],
+    num:1
   },
   methods:{
     getHeight:function(ele){//获取高度
@@ -130,8 +131,17 @@ export default {
       let id = e.currentTarget.dataset.id;
       wx.navigateTo({url:"../content/main?id=" + id});
     },
+    goLetter(e){
+      let id = e.currentTarget.dataset.id;
+      if(parseInt(id)===0){
+        wx.navigateTo({url:"../write_letter/main"});
+        return;
+      }
+      wx.navigateTo({url:"../mailbox/main"});
+    },
     goSearch(e){//进入搜索页面
-      wx.navigateTo({url:"../search/main" });
+      let id = e.currentTarget.dataset.id;
+      wx.navigateTo({url:"../search/main?id=" + id});
     },
     scrollH(e) {//滑动进入查看动态
       let scrollTop = e.mp.detail.scrollTop;
@@ -148,6 +158,7 @@ export default {
     wx.getSystemInfo({
       success: function(res) {
         that.wHeight = res.windowHeight;
+        that.wWidth = res.windowWidth;
       },
     });
     this.getHeight({'searchBox':'.searchBox', 'writeBox':'.writeBox'});
@@ -159,11 +170,28 @@ export default {
     $http.myAxios({
       url:'/jieyou/api/liveMessage/latest',
       data:{
-        'pageNum':1,
+        'pageNum':_this.num,
         'pageSize':10
       }
     }).then(results=>{
       _this.dataList = results.object;
+      console.log(_this.dataList);
+    })
+  },
+  onReachBottom: function () {
+    var that=this;
+    if(this.dataList.length<10) return;
+    $http.myAxios({
+      url:'/jieyou/api/liveMessage/latest',
+      data:{
+        'pageNum':++_this.num,
+        'pageSize':10
+      }
+    }).then(results=>{
+      // _this.dataList = results.object;
+      results.object.forEach(item=>{
+        _this.dataList.push(item);
+      })
       console.log(_this.dataList);
     })
   },

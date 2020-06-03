@@ -1,8 +1,8 @@
 {
     "pages": [
         "pages/index/main",
-        "pages/mood/main",
         "pages/menu/main",
+        "pages/mood/main",
         "pages/search/main",
         "pages/content/main",
         "pages/record/main",

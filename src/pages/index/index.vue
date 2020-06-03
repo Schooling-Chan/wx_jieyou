@@ -1,15 +1,15 @@
 <template>
   <main class="mainBox">
     <!-- 头部 -->
-    <div class="headBox">
-      <div class="judge">
+    <div class="headBox" >
+      <div class="judge" @click="goTest" data-id="0">
         <img src="../../../static/images/machine.png" alt="">
         <div class="judge-text">
           <div>心理评测</div>
           <span>答题预测当前情况</span>
         </div>
       </div>
-      <div class="doctor">
+      <div class="doctor" @click="goTest" data-id="1">
         <img src="../../../static/images/volunteer.png" alt="">
         <div class="doctor-text">
           <div>成为暖心师</div>
@@ -284,6 +284,15 @@ export default {
       }));
 
       return [weight, mood];
+    },
+    goTest(e){
+      // console.log(e);
+      let id = e.currentTarget.dataset.id;
+      if(parseInt(id)===0){
+        wx.navigateTo({url:"../test_detail/main"});
+        return;
+      }
+      wx.navigateTo({url:"../warmTest_detail/main"});
     }
   }
 }
