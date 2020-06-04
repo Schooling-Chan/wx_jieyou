@@ -1,174 +1,154 @@
 <template>
-  <div>
-    <div class="insuranceDivision padding0_30">
-      <div class="titleBox displayFlex">
-        <div class="title_left">网关</div>
-        <div class="title_right displayFlex" @tap="insuranceDialog">
-          <div class="rightInsurance">{{divisionStr}}</div>
-          <div class="rightIcon iconfont"></div>
-        </div>
-      </div>
+<div  class="examSdsContainer">
+  <ul class="examSds">
+    <div class="question" v-if="examSds[index_id]">问题{{examSds[index_id].index+1}}、{{examSds[index_id].question}}</div>
+    <van-radio-group  :value="radio" @change="onChange($event)">
+      <van-radio  name="1"  icon-size="12px" :checked-color="color">
+        <span>A.没有或很少时间</span>
+      </van-radio>
+      <van-radio  name="2"  icon-size="12px" :checked-color="color">
+        <span>B.小部分时间</span>
+      </van-radio>
+      <van-radio name="3"  icon-size="12px" :checked-color="color">
+       <span> C.相当多时间</span>
+      </van-radio>
+      <van-radio  name="4"  icon-size="12px" :checked-color="color">
+        <span>D.绝大部分或全部时间</span>
+      </van-radio>
+    </van-radio-group>
+    <div class="btn">
+      <van-row>
+        <van-col span="8" v-if="index_id != 0"><van-button type="primary" size="small" @click="last">上一题</van-button></van-col>
+        <van-col span="8" v-if="index_id != 19"><van-button type="primary" size="small" @click="ifNext">下一题</van-button></van-col>
+        <van-col span="8" v-else><van-button type="primary" size="small" @click="ifSubmit">提交</van-button></van-col>
+      </van-row>
     </div>
-    <customCheckBox :isShow="isShow" :checkboxArr="checkboxArr" @getInsurance = "getInsurance"></customCheckBox>
-    <button @click="getLetterTag">点我，后端的数据</button>
-    <button @click="login()">点我，登录</button>
-    <button open-type="getUserInfo" lang="zh_CN" class='btn' @getuserinfo="bindGetUserInfo">授权登录</button>
-  </div>
+  </ul>
+</div>
 </template>
-
 <script>
-    import {showSuccess, showModal, post, get} from '@/util'
-    import customCheckBox  from '../../components/select'
+    import {get,showModal,post} from "../../util";
     export default {
-        data() {
-            return {
-                userInfo:{
-                },
-                userId:'',
-                nickName:'',
-                avatarUrl:'',
-                wxNickname:'',
-                wxAvatarUrl:'',
-                gender:'',
-                code:'',
-                showLogin: false,
-                name: '',
-                divisionStr: "请选择", // 存储保存的字符串
-                divisionInsurance: [], // 存储保存的数组
-                isShow: false,
-                checkboxArr: [{
-                    index: '3',
-                    name: '抑郁答疑',
-                    checked: false
-                }, {
-                    index: '3',
-                    name: '家庭矛盾',
-                    checked: false
-                }, {
-                    index: '4',
-                    name: '学校生活',
-                    checked: false
-                }, {
-                    index: '5',
-                    name: '恋爱关系',
-                    checked: false
-                }, {
-                    index: '6',
-                    name: '工作烦恼',
-                    checked: false
-                }, {
-                    index: '7',
-                    name: '社交人生',
-                    checked: false
-                }],
-            }
+        data(){
+            return{
+                color:'#25B077',
+                size:'10px',
+                examSds:[],//后台抑郁评测题目
+                allRadio: [],//提交给后台的真题数据
+                radio: '',
+                index_id:'0',//刚开始选择的题目
+                answers:[],//选择的答案
+                radio_answers:[],//抑郁症每道题选中的资料
+                radio_id:'',//每道题的选择
+            }},
+        beforeMount(){
+                this.getExamSds()
         },
-
-        components: {
-            customCheckBox
-        },
-        onLoad (options) {
-            wx.setNavigationBarTitle({
-                title: '微信授權'
-            })
-        },
-        methods: {
-            // 处理子组件传过来的值
-            getInsurance(divisionsurance, isShow) {
-                if (divisionsurance.length != 0) {
-                    this.divisionInsurance = divisionsurance;
-                    this.divisionStr = '';
-                    this.divisionInsurance.forEach(item => {
-                        this.divisionStr += item.name + ' ';
-                    })
-                } else {
-                    this.divisionStr = '请选择';
-                }
-                this.isShow = isShow;
+        methods:{
+            onChange(event) {
+                    this.radio=event.mp.detail;
+                    this.radio_answers.splice(this.index_id,1,this.radio);
+                    console.log(this.radio_answers);
             },
-            insuranceDialog() {
-                this.isShow = true;
-                // console.log(this.isShow)
-            },
-            async getLetterTag() {
+            async getExamSds(){
+                //获得抑郁判断题目
                 try {
-                    let params = {
-                        'code': '033xsQJr1qkC5k0HSCHr10lNJr1xsQJ3',
-                        'gender':'2',
-                        'wxAvatarUrl':'https://wx.qlogo.cn/mmopen/vi_32/WcmHEYUmR9MDvicl3a52NJ8939ysaPEJYeXicicPpSW0w1UL6t33Wl6uHg31mmXrkrrK0pGOO3icZ51vkLvmG49MeQ/132',
-                        'wxNickname':'忘忧草',
+                    let header = {
+                        'token': wx.getStorageSync('token'),
+                        'Content-Type': 'application/json'
                     }
-                    console.log(params)
-                    const res = await post('/jieyou/api/login',params)
-                    console.log('从后端返回的执行正确的信息是：', res)
+                    const res = await get('/jieyou/api/exam/sds','',header)
+                    this.examSds=res.data.object
+                    console.log( 'this.examSds',this.examSds)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
             },
-            bindGetUserInfo () {
-                let that = this
-                // 查看是否授权
-                wx.getSetting({
-                    success (res) {
-                        if (res.authSetting['scope.userInfo']) {
-                            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                            wx.login({
-                                success (res) {
-                                    if (res.code) {
-                                        that.code = res.code
-                                        console.log('测试',res)
-                                        wx.getUserInfo({
-                                            success :res=> {
-                                                that.userInfo=res.userInfo;
-                                                that.wxAvatarUrl=that.userInfo.avatarUrl;
-                                                that.wxAvatarUrl=that.userInfo.avatarUrl;
-                                                that.gender=that.userInfo.gender;
-                                                that.wxNickname=that.userInfo.nickName;
-                                                that.login()
-                                            }
-                                        })
-                                        //that.in()
-                                        // 发起网络请求
-
-                                    } else {
-                                        wx.showToast({
-                                            title: '登录失敗',
-                                            icon: 'none',
-                                            duration: 10000
-                                        })
-                                        setTimeout(function () {
-                                            wx.hideToast()
-                                        }, 2000)
-                                    }
-                                }
-                            })
-                        }
-                    },
-                    fail(res) {
-                        wx.showToast({
-                            title: res,
-                            icon: 'none',
-                            duration: 10000
-                        })
-                    }
-                })
-            },
-            async login () {
-                let that = this
-                let params = {
-                    'code': that.code,
-                    'gender':that.gender,
-                    'wxAvatarUrl':that.wxAvatarUrl,
-                    'wxNickname':that.wxNickname,
+            last(){
+                //点击上一个
+                if(this.index_id){
+                    this.index_id--;
+                    this.radio=this.radio_answers[this.index_id];
                 }
-                console.log(params)
-                const res = await post('/jieyou/api/login', params)
             },
-
-
-
-        }
+            ifNext(){
+                //判断能否下一个
+               // console.log(this.radio_index[this.index_id])
+                if(this.radio_answers[this.index_id]){
+                    this.next();
+                }else{
+                    showModal('','请答完这道题才能进入下一题哦')
+                }
+            },
+            next(){
+                //点击下一个
+                this.index_id++;
+                this.radio='';
+            },
+            ifSubmit(){
+                this.radio_answers.forEach((item,index)=> {
+                    this.answers.push({answerIndex:--item,problemIndex:index});
+                })
+                this.submit()
+            },
+            async submit(){
+                //提交提交抑郁评测答案
+                let that = this
+                const params = {
+                    answers:that.answers
+                }
+                console.log('params',params)
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/json'
+                }
+                try {
+                    const res = await post('/jieyou/api/exam/sds',params,header)
+                    // console.log('11111',res)
+                    that.answers=[]
+                    that.radio_answers=[]
+                    that.index_id='0'
+                    that.radio= ''
+                    wx.setStorageSync('goal', res.data.object)
+                    wx.navigateTo({
+                        //提交后若成功直接调转到分数页面
+                        url:'/pages/test_detail/main'
+                    })
+                } catch (e) {
+                    console.log('从后端返回的执行错误的信息是：', e)
+                }
+            },
+        },
     }
 </script>
+<style scoped>
+.examSdsContainer{
+  display: flex;
+  flex-direction: column;
+  font-size:14px;
+}
+ .question{
+   font-size:16px;
+   line-height:35px;
+   font-weight:40px;
+   width:70%;
+   margin-bottom: 5px;
+ }
+  span{
+    display:inline-block;
+    line-height:60px;
+    margin-top:-20px !important;
+  }
+   .examSds{
+     font-size:16px;
+     height:100%;
+     width:100%;
+     border-color: #1ADEE0;
+     position:absolute;
+     top: 50%;
+     left: 50%;
+     margin-top: -50%;
+     margin-left: -30%;
+   }
+</style>
 
-<style ></style>

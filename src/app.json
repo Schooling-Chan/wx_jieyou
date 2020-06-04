@@ -1,13 +1,20 @@
 {
     "pages": [
         "pages/center/main",
+        "pages/login/main",
+        "pages/replyLetter/main",
+        "pages/warmTest_detail/main",
+        "pages/warmTest/main",
+        "pages/test_detail/main",
+        "pages/test/main",
         "pages/write_letter/main",
+        "pages/comments_detail/main",
         "pages/mailbox_detail/main",
-        "pages/menu/main",
-        "pages/mailbox/main",
         "pages/system_detail/main",
         "pages/profile_detail/main",
-        "pages/comments_detail/main",
+        "pages/modifyNickname/main",
+        "pages/mailbox/main",
+        "pages/menu/main",
         "pages/drawLetter_detail/main",
         "pages/search_details/main",
         "pages/content/main",
@@ -43,8 +50,6 @@
             "iconPath": "static/tabs/center.png",
             "selectedIconPath": "static/tabs/center-active.png"
         }],
-
-
         "position": "bottom"
     }
 }

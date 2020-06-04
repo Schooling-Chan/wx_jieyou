@@ -1,9 +1,9 @@
 <template>
   <div class="centerContainer">
-    <div v-if="showLogin">
-      <LoginWindow @changeShow="getModel(arguments)" ref="lw"></LoginWindow>
-    </div>
-    <div class="top">
+<!--    <div v-if="showLogin">-->
+<!--      <LoginWindow @changeShow="getModel(arguments)" ref="lw"></LoginWindow>-->
+<!--    </div>-->
+    <div class="top" @tap="toProfile">
       <div class="userinfo" >
         <img  :src="userinfo.avatarUrl" alt="">
       </div>
@@ -11,9 +11,6 @@
         <label>{{userinfo.nickname}}</label>
         <p class="notice"></p>
       </div>
-      <button class="outlogin" @click="loginout">
-        退出登录
-      </button>
     </div>
     <div class="headBox">
           <div class="content">
@@ -68,32 +65,34 @@
   </div>
 </template>
 <script>
-    import LoginWindow from '@/components/LoginWindow'
-    import {showSuccess, showModal, post, get,del} from '@/util'
+    // import LoginWindow from '@/components/LoginWindow'
+    import {get} from '@/util'
     export default {
-    components: {
-            LoginWindow
-        },
+    // components: {
+    //         LoginWindow
+    //     },
     data(){
         return{
             // 用三元运算符直接读取缓存里面的用户信息
-            userinfo: wx.getStorageSync('userinfo') ? wx.getStorageSync('userinfo') : {},
-            showLogin:false,
+            userinfo: '',
+            // showLogin:false,
             token:'',
+            receiveLetter:[],
+            sendLetter:[],
+            comment:[],
+            replyDraft:[],
+            sendLetterDraft:[],
         }
     },
-    mounted (){
-            const userinfo = wx.getStorageSync('userinfo')
-            // 如果缓存中有userinfo的信息，说明用户登录了。
-            if (userinfo) {
-                // 将用户信息储存到data的userinfo字段里面，this.userinfo就是指的这个字段。
-                this.userinfo= userinfo
-                console.log('用户信息',this.userinfo)
-            } else {
-                wx.hideTabBar()
-                this.showLogin = true
-            }
-        },
+    mounted (){},
+     onShow(){
+         this.getReceiveLetter()
+         this.getSendLetter()
+         this.getComment()
+         this.replyLetterDraft()
+         this.SendLetterDraft()
+         this.userinfo=wx.getStorageSync('userinfo')
+     },
     methods:{
         toMailBox(){
          //跳转到信箱页面
@@ -131,46 +130,96 @@
                 url:'/pages/comments_detail/main'
             })
         },
-        getModel (val) {//控制登录弹窗消息
-            console.log('val', val)
-            // 将第一个信息false赋值到showLogin变量中，控制登录弹窗消息
-            this.showLogin = val[0]
-            //this.userinfo = val[1]
-        },
-        async loginout() {
+        async getReceiveLetter(){
+            //收信箱详情通知
             try {
-                let that = this
-                that.token = wx.getStorageSync('token')
-                const params= {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'token': that.token,
-                }
                 let header = {
                     'token': wx.getStorageSync('token'),
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-                const res = await del('/jieyou/api/logout', params,header)
-                console.log('从后端返回的执行正确的信息是：', res)
-                if(res.data.success){
-                    wx.setStorageSync('token', '')
-                    wx.setStorageSync('userinfo', '')
-                    wx.showToast({
-                        title: '退出成功',//提示文字
-                        duration:2000,//显示时长
-                    })
-                    wx.reLaunch({
-                        url: '/pages/center/main'
-                    })
-                }else{
-                    wx.showToast({
-                        title: '加载中',//提示文字
-                        duration:2000,//显示时长
-                    })
-                }
+                const res = await get('/jieyou/api/annotation/receiveLetter','',header)
+                let that = this
+                that.receiveLetter = res.data.object
+                that.$store.dispatch('getReceiveLetter',that.receiveLetter)
+                //当拿到数据时，通过actions分发
             } catch (e) {
                 console.log('从后端返回的执行错误的信息是：', e)
             }
         },
+        async getSendLetter(){
+            //寄信箱详情通知
+            try {
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                const res = await get('/jieyou/api/annotation/sendLetter','',header)
+                let that = this
+                that.sendLetter = res.data.object
+                console.log('从前端返回的正确的信息是：', res)
+                that.$store.dispatch('getSendLetter',that.sendLetter)
+                //当拿到数据时，通过actions分发
+            } catch (e) {
+                console.log('从后端返回的执行错误的信息是：', e)
+            }
+        },
+        async getComment(){
+            //寄信箱详情通知
+            try {
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                const res = await get('/jieyou/api/annotation/comment','',header)
+                let that = this
+                that.comment = res.data.object
+                console.log('从前端返回的正确的信息是：', res)
+                that.$store.dispatch('getComment',that.comment)
+                //当拿到数据时，通过actions分发
+            } catch (e) {
+                console.log('从后端返回的执行错误的信息是：', e)
+            }
+        },
+        async replyLetterDraft(){
+            //寄信箱详情通知
+            try {
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                const res = await get('/jieyou/api/annotation/replyLetterDraft','',header)
+                let that = this
+                that.replyDraft = res.data.object
+                console.log('从前端返回的正确的信息是：', res)
+                that.$store.dispatch('getReplyLetterDraft',that.replyDraft)
+                //当拿到数据时，通过actions分发
+            } catch (e) {
+                console.log('从后端返回的执行错误的信息是：', e)
+            }
+        },
+        async SendLetterDraft(){
+            //寄信箱详情通知
+            try {
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                const res = await get('/jieyou/api/annotation/sendLetterDraft','',header)
+                let that = this
+                that.sendLetterDraft = res.data.object
+                console.log('从前端返回的正确的信息是：', res)
+                that.$store.dispatch('getReplySendLetterDraft',that.sendLetterDraft)
+                //当拿到数据时，通过actions分发
+            } catch (e) {
+                console.log('从后端返回的执行错误的信息是：', e)
+            }
+        },
+        // getModel (val) {//控制登录弹窗消息
+        //     console.log('val', val)
+        //     // 将第一个信息false赋值到showLogin变量中，控制登录弹窗消息
+        //     this.showLogin = val[0]
+        //     //this.userinfo = val[1]
+        // },
     },
 }
 </script>
@@ -226,21 +275,6 @@
         color: #FFFFFF;
         text-decoration:underline;
       }
-    }
-    .outlogin{
-      margin-top: 30px;
-      margin-right:60px;
-      height:30px;
-      width:25%;
-      line-height: 30px;
-      color: #FFFFFF;
-      border-color: #FFFFFF;
-      background: transparent;
-      font-size: 16px;
-      font-weight:bold;
-    }
-    .outlogin::after{
-      border-color: #FFFFFF;
     }
   }
   .contain{

@@ -1,10 +1,10 @@
 <template>
     <div class="writeLetterContainer">
         <button @click="isSubmit">完成</button>
-        <button @click="summit">草稿</button>
+        <button @click="isSubmitDraft">草稿</button>
         <div class="contain">
           <div class="row tip">
-            <lable>这是一封关于什么的信</lable>
+            <lable>这是一封想写给她的信</lable>
             <div  class="selectBox" @tap="insuranceDialog">
               <div class="input">{{divisionStr}}</div>
               <div class="rightIcon iconfont"></div>
@@ -42,14 +42,15 @@
 </template>
 
 <script>
-    import {showSuccess, showModal, get,post} from '@/util'
+    import {showSuccess, showModal, get,post,put} from '@/util'
     import customCheckBox  from '../../components/select'
+    import {mapState} from 'vuex'
     export default {
         data(){
             return{
                 userinfo: wx.getStorageSync('userinfo') ? wx.getStorageSync('userinfo') : {},//用户信息
                 test:{},
-                toUserId:Number,//收信人id
+                toUserId:'',//收信人id
                 content: '',//内容
                 tags: [], // 存储保存的数组
                 tag:[],//提交给后台的标签数据
@@ -61,7 +62,14 @@
                 divisionInsurance: [], // 存储保存标签的数组
                 isShow: false,
                 checkboxArr: [],//信的标签选择列表
+                success:false,//提交成功与否
+                nxs:{},
+                nxs_id:'',//暖心师的id
+                send_draft:{},
             }
+        },
+        computed: {
+            ...mapState(['sendLetterDraft'])
         },
         components: {
             customCheckBox,
@@ -71,8 +79,18 @@
                 this.word_count = this.content.length//监听以写的字数
             },
         },
+        beforeMount(){
+            if(this.$mp.query.draft_id){
+                this.getSendDraft()
+            }
+            if(this.$mp.query.id){
+                this.getWarmerUser()
+            }
+        },
+        onShow(){
+            this.getWarmer()//获得推荐的暖心师
+        },
         mounted(){
-              this.getWarmer()//获得推荐的暖心师
               this. getLetterTag()//获得信的所有标签
         },
         methods: {
@@ -126,8 +144,9 @@
             },
             async submit(){//寄信
                 let that = this
+                that.toUserId=that.array[that.nxs_index].userId
                 const params = {
-                    'toUserId': that.array[that.nxs_index].userId,
+                    'toUserId': that.toUserId,
                     'content': that.content,
                     'tags': that.tag
                 }
@@ -136,21 +155,90 @@
                     'Content-Type': 'application/json'
                 }
                 const res = await post('/jieyou/api/letter',params, header)
-                console.log(res)
-                console.log(params)
-                console.log('333333')
+                console.log('letter从后端返回的执行正确的信息是：', res)
+                that.success=res.data.success
+                console.log('letter从后端返回的执行正确的信息是：', that.success)
+            },
+            async submitDraft(){
+                let that = this
+                that.toUserId=that.array[that.nxs_index].userId
+                const params = {
+                    'toUserId': that.toUserId,
+                    'content': that.content,
+                    'tags': that.tag
+                }
+                let header = {
+                    'token': wx.getStorageSync('token'),
+                    'Content-Type': 'application/json'
+                }
+                const res = await post('/jieyou/api/letter/draft',params, header)
+                console.log('letter从后端返回的执行正确的信息是：', res)
+                that.success=res.data.success
+                console.log('letter从后端返回的执行正确的信息是：', that.success)
+            },
+            isSubmitDraft(){//判断能否寄出
+                if(this.word_count&&this.tag){
+                    this.submitDraft()
+                    showSuccess('已存为草稿')
+                    this.content=''
+                    this.divisionInsurance=[]
+                    this.divisionStr='请选择'
+                    this.tag=''
+                }else{
+                    showModal('','请至少选择一个信的类型哦或编辑内容哦')
+                }
             },
             isSubmit(){//判断能否寄出
                 if(this.word_count&&this.tag){
                     this.submit()
                     showSuccess('发送成功')
                     this.content=''
-                    this.divisionInsurance=''
-                    this.tag=''
+                    this.divisionInsurance=[]
+                    this.divisionStr='请选择'
+                    this.tag=[]
+                    this.tags=[]
                 }else{
-                    showModal('','请编辑内容')
+                    showModal('','请至少选择一个信的类型哦或编辑内容哦')
                 }
-            }
+            },
+            async getSendDraft(){
+                //寄信箱详情通知
+                try {
+                    let header = {
+                        'token': wx.getStorageSync('token'),
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                    let that = this
+                    that.indexId =that.sendLetterDraft[this.$mp.query.draft_id].sourceId
+                    const url='/jieyou/api/letter/'+that.indexId
+                    const res = await get(url,'',header)
+                    that.send_draft=res.data.object
+                    console.log( '222s',that.send_draft)
+                    that.tags=that.send_draft.tags
+                    this.divisionStr='';
+                    that.tags.forEach(item => {
+                        this.divisionStr += item.name + ' ';
+                        this.tag.push(item.index);//添加标签
+                    })
+                    that.content=that.send_draft.sendContent
+                    that.nxs_id=that.send_draft.toUser.userId
+                    this.getWarmerUser()
+                } catch (e) {
+                    console.log('从后端返回的执行错误的信息是：', e)
+                }
+            },
+            async getWarmerUser(){
+                //寄信箱详情通知
+                try {
+                    let that = this
+                    const url='/jieyou/api/user/'+that.nxs_id
+                    const res = await get(url)
+                    that.nxs=res.data.object
+                    that.array.unshift(that.nxs)//让传过来的暖心师资料添加到暖心师列表中，使默认为选中的第一项
+                } catch (e) {
+                    console.log('从后端返回的执行错误的信息是：', e)
+                }
+            },
         }
     }
 </script>
@@ -238,9 +326,6 @@
         margin-bottom:7px;
         margin-right: 10px;
       }
-      .wechat-input{
-        font-size:14px;
-      }
     }
     .text_letter{
       /*border-bottom: 1px #E8E8E8 solid;*/
@@ -257,6 +342,7 @@
         height:40px;
         font-size:14px;
         padding-top:5px;
+        line-height:25px;
       }
     }
   }

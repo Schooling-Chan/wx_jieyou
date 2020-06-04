@@ -35,13 +35,17 @@ export function del (url, data,header) {
   // 返回的是一个Promise对象
   return request(url, 'DELETE', data,header)
 }
+export function put (url, data,header) {
+  // 返回的是一个Promise对象
+  return request(url, 'PUT', data,header)
+}
 
 
 
 
 // 将Promise对象封装在request()函数中
 function request (url, method, data,header = {
-  'Content-Type': 'application/x-www-form-urlencoded'
+  'Content-Type': 'application/x-www-form-urlencoded',
 }){
   // 将wx.request请求API包装成一个Promise对象
   return new Promise((resolve, reject) => {

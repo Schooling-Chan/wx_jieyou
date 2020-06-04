@@ -1,12 +1,24 @@
 <template>
     <div>
       <div class="receiving_img">
+        <button>完成</button>
         <div class="content_font">
           <div class="right">
-            <p class="mail_name">{{mail_name}}</p>
-            <p class="mail_time">{{mail_time}}</p>
-            <p class="mail_content">{{mail_content}}
-            </p>
+            <p class="mail_name"> To:mail_name}}</p>
+            <p class="mail_time">mail_time}}</p>
+            <div class="row">
+              <label class="word-count">{{word_count}}/字数</label>
+            </div>
+            <div class="text_letter mail_content">
+                      <textarea
+                        class="text_content"
+                        v-model='content'
+                        :maxlength='number'
+                        placeholder="请输入你想对他说的话"
+                      ></textarea>
+              <div>
+              </div>
+            </div>
             <p  class="none"></p>
           </div>
           <div class="left">
@@ -22,17 +34,19 @@
 </template>
 
 <script>
-    export default {
-        props:{
-            mail_name:String,
-            mail_time:String,
-            mail_content:String,
+    export default{
+        data(){
+            return{
+                number:1200,//信的字数
+                word_count: 0,//字数
+                content:'',//回信的内容
+            }
         },
-        // watch:{
-        //     getList(val){
-        //         this.list=val;
-        //     }
-        // }
+        watch:{
+            content () {
+                this.word_count = this.content.length//监听以写的字数
+            },
+        },
     }
 </script>
 
@@ -66,7 +80,7 @@
     .content_font{
       overflow:hidden;
       width:91%;
-      text-align:center;
+     // text-align:center;
       padding:20px 10px;
       height:auto;
       background:#fff;
@@ -83,7 +97,7 @@
           font-size:16px;
           font-weight:bold;
         }
-        .mail_content {
+        .mail_content , .text_letter{
           /*设置文本的行距及下划线*/
           display: inline;
           padding-bottom: 4px;
@@ -117,6 +131,26 @@
         .none{
           height:80px;
           width:100%;;
+        }
+        .row{
+          float:right;
+        }
+        .row , .text_letter{
+          height:auto;
+          font-size:14px;
+          .text_content{
+            height:calc(100vh - 100px);
+          }
+        }
+        button {
+          margin-right:15px;
+          float:right;
+          width:15%;
+          border-radius:20px;
+          background: #a6d7ff;
+          font-size:12px;
+          color:#FFFFFF;
+          font-weight:bold;
         }
       }
       .left{
