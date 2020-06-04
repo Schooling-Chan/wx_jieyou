@@ -1,18 +1,7 @@
 {
     "pages": [
-<<<<<<< HEAD
-=======
-        "pages/index/main",
-        "pages/menu/main",
-        "pages/mood/main",
-        "pages/search/main",
-        "pages/content/main",
-        "pages/record/main",
-        "pages/comments_detail/main",
-        "pages/search_details/main",
->>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
-        "pages/center/main",
         "pages/login/main",
+        "pages/center/main",
         "pages/replyLetter/main",
         "pages/warmTest_detail/main",
         "pages/warmTest/main",
@@ -22,7 +11,6 @@
         "pages/comments_detail/main",
         "pages/mailbox_detail/main",
         "pages/system_detail/main",
-<<<<<<< HEAD
         "pages/profile_detail/main",
         "pages/modifyNickname/main",
         "pages/mailbox/main",
@@ -31,11 +19,7 @@
         "pages/search_details/main",
         "pages/content/main",
         "pages/search/main",
-        "pages/index/main",
-        "pages/counter/main"
-=======
-        "pages/drawLetter_detail/main"
->>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
+        "pages/index/main"
     ],
     "window": {
         "backgroundTextStyle": "dark",

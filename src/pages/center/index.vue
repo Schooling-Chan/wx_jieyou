@@ -13,7 +13,6 @@
       </div>
     </div>
     <div class="headBox">
-<<<<<<< HEAD
           <div class="content">
             <div class="letter"  @tap="toMailBox">
               <div class="letter-pic"><img src="../../../static/images/letter.png" alt="">
@@ -30,19 +29,8 @@
               </div>
               <span class="news-span">写信</span>
             </div>
-=======
-      <div class="content">
-        <div class="letter"  @tap="toMailBox">
-          <div class="letter-pic"><img src="" alt="">
-          </div>
-          <span class="letter-span">信箱</span>
-        </div>
-        <div class="drawLetter" @tap="toDrawLetterDetail">
-          <div class="drawLetter-pic"><img src="" alt="">
->>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
           </div>
         </div>
-<<<<<<< HEAD
     <div class="contain">
       <div class="row">
         <label class="left">
@@ -73,28 +61,12 @@
           >
         </label>
       </div>
-=======
-        <div class="news" @tap="toCommentsDetail">
-          <div class="news-pic"><img src="" alt="">
-          </div>
-          <span class="news-span">评论</span>
-        </div>
-      </div>
-    </div>
-    <div class="information">
-      
->>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
     </div>
   </div>
 </template>
 <script>
-<<<<<<< HEAD
     // import LoginWindow from '@/components/LoginWindow'
     import {get} from '@/util'
-=======
-
-    // const LOGOUT_URL ="http://120.55.44.167:40001/mock/19/jieyou/api/logout"
->>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
     export default {
     // components: {
     //         LoginWindow

@@ -1,9 +1,9 @@
 {
-  "usingComponents": {
-    "van-radio": "../../static/vant-weapp/dist/radio/index",
-    "van-radio-group": "../../static/vant-weapp/dist/radio-group/index",
-    "van-row": "../../static/vant-weapp/dist/row/index",
-    "van-col": "../../static/vant-weapp/dist/col/index",
-    "van-button": "../../static/vant-weapp/dist/button/index"
-  }
+    "usingComponents": {
+        "van-radio": "../../static/vant-weapp/lib/radio/index",
+        "van-radio-group": "../../static/vant-weapp/lib/radio-group/index",
+        "van-row": "../../static/vant-weapp/lib/row/index",
+        "van-col": "../../static/vant-weapp/lib/col/index",
+        "van-button": "../../static/vant-weapp/lib/button/index"
+    }
 }

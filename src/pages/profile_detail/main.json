@@ -1,8 +1,8 @@
 {
-  "navigationBarTitleText": "个人资料",
-  "usingComponents":{
-    "van-button": "../../static/vant-weapp/dist/button/index",
-    "van-cell": "../../static/vant-weapp/dist/cell/index",
-    "van-cell-group": "../../static/vant-weapp/dist/cell-group/index"
-  }
+    "navigationBarTitleText": "个人资料",
+    "usingComponents": {
+        "van-button": "../../static/vant-weapp/lib/button/index",
+        "van-cell": "../../static/vant-weapp/lib/cell/index",
+        "van-cell-group": "../../static/vant-weapp/lib/cell-group/index"
+    }
 }
