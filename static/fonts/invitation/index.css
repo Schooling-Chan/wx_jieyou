@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'iconfont';
     /* project id 1764620 */
-    src: url('//at.alicdn.com/t/font_1764620_1mbq2tg4f2w.eot');
-    src: url('//at.alicdn.com/t/font_1764620_1mbq2tg4f2w.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1764620_1mbq2tg4f2w.woff2') format('woff2'), url('//at.alicdn.com/t/font_1764620_1mbq2tg4f2w.woff') format('woff'), url('//at.alicdn.com/t/font_1764620_1mbq2tg4f2w.ttf') format('truetype'), url('//at.alicdn.com/t/font_1764620_1mbq2tg4f2w.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.eot');
+    src: url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.woff2') format('woff2'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.woff') format('woff'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.ttf') format('truetype'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -29,7 +29,7 @@
     content: "\e625";
     font-size: 50rpx;
     position: absolute;
-    left: -162%;
+    transform: translateX(-105%);
     top: -14%;
 }
 
@@ -39,6 +39,15 @@
     position: absolute;
     transform: translateX(-105%);
     top: -9%;
+}
+
+.iconliked:before {
+    content: "\e639";
+    font-size: 40rpx;
+    position: absolute;
+    transform: translateX(-105%);
+    top: -9%;
+    color: #69C8BB;
 }
 
 .iconheart:before {
@@ -105,4 +114,48 @@
     width: 55rpx;
     transform: translateX(-108%);
     color: #69C8BB;
+}
+
+
+/* 富文本 */
+
+.iconfont1 {
+    font-family: "iconfont" !important;
+    font-size: 38rpx;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.iconplus::before {
+    content: "\e61e";
+    position: relative;
+    color: #000;
+    height: 55rpx;
+    line-height: 55rpx;
+    width: 55rpx;
+}
+
+.iconComments::after {
+    content: "\e600";
+    position: relative;
+    color: #707070;
+    font-size: 24rpx;
+    height: 55rpx;
+    line-height: 55rpx;
+    width: 55rpx;
+}
+
+
+/* 删除 */
+
+.icondelete::after {
+    content: "\e615";
+    position: absolute;
+    color: #fff;
+    text-align: center;
+    background: rgba(0, 0, 0, .7);
+    font-size: 60rpx;
+    width: 100%;
+    left: 0;
 }

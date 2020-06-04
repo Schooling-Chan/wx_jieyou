@@ -1,15 +1,15 @@
 <template>
   <main class="mainBox">
     <!-- 头部 -->
-    <div class="headBox">
-      <div class="judge">
+    <div class="headBox" >
+      <div class="judge" @click="goTest" data-id="0">
         <img src="../../../static/images/machine.png" alt="">
         <div class="judge-text">
           <div>心理评测</div>
           <span>答题预测当前情况</span>
         </div>
       </div>
-      <div class="doctor">
+      <div class="doctor" @click="goTest" data-id="1">
         <img src="../../../static/images/volunteer.png" alt="">
         <div class="doctor-text">
           <div>成为暖心师</div>
@@ -19,24 +19,24 @@
     </div>
 
     <!-- 每日一记 -->
-    <div class="noteBox">
+    <div class="noteBox" >
       <div class="title"><div class="title-text">每日打卡</div></div>
-      <div class="content">
-        <div class="medical">
-          <div class="comment-pic"><img src="../../../static/images/heart.png" alt=""></div>
+      <div class="content" >
+        <div class="expression" >
+          <div class="comment-pic" @tap="goNew" data-set="expression"><img src="../../../static/images/heart.png" alt="" data-set="expression"></div>
           <span>心情打卡</span>
         </div>
-        <div class="medical">
-          <div class="comment-pic"><img src="../../../static/images/kitmedical.png" alt=""></div>
+        <div class="medical" >
+          <div class="comment-pic" @click="goNew" data-set="medical"><img src="../../../static/images/kitmedical.png" alt="" data-set="medical"></div>
           <span>用药记录</span>
         </div>
-        <div class="weight">
-          <div class="comment-pic"><img src="../../../static/images/weight.png" alt=""></div>
+        <div class="weight" >
+          <div class="comment-pic"  @click="goNew" data-set="weight"><img src="../../../static/images/weight.png" alt="" data-set="weight"></div>
           <span>体重记录</span>
         </div>
-        <div class="hospital">
-          <div class="comment-pic"><img src="../../../static/images/hospital.png" alt=""></div>
-          <span>附近医院</span>
+        <div class="hospital" >
+          <div class="comment-pic"  @click="goNew" data-set="hospital"><img src="../../../static/images/hospital.png" alt="" data-set="hospital"></div>
+          <span>导航医院</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,9 @@
     <!-- 情绪统计 -->
     <div class="emotionBox">
       <div class="title"><div class="title-text">情绪统计</div></div>
+      <div class="details">
+        <span v-for="(item,key) in moods" :key="key">{{key}}:{{item}}</span>
+      </div>
       <div class="mp-echarts">
        <mpvue-echarts :echarts="echarts" :onInit="initChart"/>
       </div>
@@ -51,256 +54,256 @@
        <mpvue-echarts :echarts="echarts" :onInit="ecBarInit" canvasId="bar" />
       </div>
       <div class="mp-echarts">
-        <mpvue-echarts :echarts="echarts" :onInit="ecScatterInit" canvasId="scatter" />
+        <mpvue-echarts :echarts="echarts" :onInit="ecAllInit" canvasId="scatter" />
       </div>
     </div>
   </main>
 </template>
 
 <script>
-// import * as echarts from '../../../static/plugins/echarts.min'
-import mpvueEcharts from 'mpvue-echarts'
+import mpvueEcharts from 'mpvue-echarts';
+import $http from '../../../static/plugins/ajax';
+
 
 let echarts = require('../../../static/plugins/echarts.min');
+// let $http = require('../../utils/ajax');
+let expressions = {
+        month:null,
+        week:null
+      },
+      weight = {
+        month:null,
+        week:null
+      };
 
-function initChart (canvas, width, height) {
-  const chart = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  })
-  canvas.setChart(chart)
-  var option = {
+function baseEcharts( canvas, width, height, options = {
     backgroundColor: '#fff',
+<<<<<<< HEAD
     color: ['#37A2DA', '#67E0E3'],
+=======
+    color: ['#37A2DA'],
+
+
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
     legend: {
-      type:'plain',
-      id:'tips',
-      show: true,
-      bottom: '20rpx',
-      data: ['最新成交价', '预购队列']
+        type: 'plain',
+        id: 'tips',
+        show: true,
+        top: '10rpx',
+        data: ['心情指数']
     },
     grid: {
-      containLabel: true
+        containLabel: true
     },
     xAxis: {
-      type: 'category',
-      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        type: 'category',
+        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
     },
     yAxis: {
-      type: 'value',
-      name: '心情指数',
-      splitLine: {
-        lineStyle: {
-          type: 'dashed'
-        }
-      }
-    },
-    series: [{
-      name: '最新成交价',
-      type: 'line',
-      smooth: true,
-      data: [18, 36, 65, 30, 78, 40, 33]
-    }, {
-      name: '预购队列',
-      type: 'line',
-      smooth: true,
-      data: [12, 50, 51, 35, 70, 30, 20]
-    }]
-  }
-  chart.setOption(option)
-  return chart
-}
-
-let barChart, scatterChart;
-function getBarOption () {
-  return {
-    backgroundColor: '#fff',
-    color: ['#37a2da', '#32c5e9', '#67e0e3'],
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: { // 坐标轴指示器，坐标轴触发有效
-        type: 'line' // 默认为直线，可选为：'line' | 'shadow'
-      }
-    },
-    legend: {
-      data: ['热度', '正面', '负面']
-    },
-    grid: {
-      left: 20,
-      right: 20,
-      bottom: 15,
-      top: 40,
-      containLabel: true
-    },
-    xAxis: [
-      {
         type: 'value',
-        axisLine: {
-          lineStyle: {
-            color: '#999'
-          }
+        name: '心情指数',
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
         },
-        axisLabel: {
-          color: '#666'
-        }
-      }
-    ],
-    yAxis: [
-      {
-        type: 'category',
-        axisTick: { show: false },
-        data: ['汽车之家', '今日头条', '百度贴吧', '一点资讯', '微信', '微博', '知乎'],
-        axisLine: {
-          lineStyle: {
-            color: '#999'
-          }
-        },
-        axisLabel: {
-          color: '#666'
-        }
-      }
-    ],
-    series: [
-      {
-        name: '热度',
-        type: 'bar',
-        label: {
-          normal: {
-            show: true,
-            position: 'inside'
-          }
-        },
-        data: [300, 270, 340, 344, 300, 320, 310]
-      },
-      {
-        name: '正面',
-        type: 'bar',
-        stack: '总量',
-        label: {
-          normal: {
-            show: true
-          }
-        },
-        data: [120, 102, 141, 174, 190, 250, 220]
-      },
-      {
-        name: '负面',
-        type: 'bar',
-        stack: '总量',
-        label: {
-          normal: {
-            show: true,
-            position: 'left'
-          }
-        },
-        data: [-20, -32, -21, -34, -90, -130, -110]
-      }
-    ]
-  }
-}
-function getScatterOption () {
-  var data1 = []
-  var data2 = []
-  for (var i = 0; i < 10; i++) {
-    data1.push(
-      [
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 40)
-      ]
-    )
-    data2.push(
-      [
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 100),
-        Math.round(Math.random() * 100)
-      ]
-    )
-  }
-  var axisCommon = {
-    axisLabel: {
-      textStyle: {
-        color: '#C8C8C8'
-      }
-    },
-    axisTick: {
-      lineStyle: {
-        color: '#fff'
-      }
-    },
-    axisLine: {
-      lineStyle: {
-        color: '#C8C8C8'
-      }
-    },
-    splitLine: {
-      lineStyle: {
-        color: '#C8C8C8',
-        type: 'solid'
-      }
-    }
-  }
-  return {
-    color: ['#FF7070', '#60B6E3'],
-    backgroundColor: '#fff',
-    xAxis: axisCommon,
-    yAxis: axisCommon,
-    legend: {
-      data: ['aaaa', 'bbbb']
-    },
-    visualMap: {
-      show: false,
-      max: 100,
-      inRange: {
-        symbolSize: [20, 70]
-      }
     },
     series: [{
-      type: 'line',
-      name: 'aaaa',
-      data: data1
-    },
-    {
-      name: 'bbbb',
-      type: 'line',
-      data: data2
-    }
-    ],
-  }
-}
+        name: '心情指数',
+        type: 'line',
+        smooth: true,
+        data: [18, 98, 65, 30, 78, 40, 33]
+    }]
+}) {
+    const chart = echarts.init(canvas, null, {
+        width: width,
+        height: height
+    })
+    canvas.setChart(chart)
+    chart.setOption(options)
+    return chart;
+};
+
+
 export default {
   data () {
     return {
       echarts,
-      initChart,
-      ecBarInit: function (canvas, width, height) {
-        barChart = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        });
-        canvas.setChart(barChart);
-        barChart.setOption(getBarOption());
-        return barChart
+      initChart: function(canvas, width, height){
+        baseEcharts(canvas, width, height);
       },
-      ecScatterInit: function (canvas, width, height) {
-        scatterChart = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        })
-        canvas.setChart(scatterChart)
-        scatterChart.setOption(getScatterOption())
-        return scatterChart
+      ecBarInit: function(canvas, width, height){
+        baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                  type: 'cross',
+                  crossStyle: {
+                      color: '#999'
+                  }
+              }
+          },
+          color:["#7DC2E6"],
+          xAxis: {
+            type: 'category',
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          },
+          yAxis: {
+            type: 'value',
+            name: '体重(kg)',
+          },
+          series: [{
+              data: [120, 180, 150, 80, 70, 110, 130],
+              type: 'bar'
+          }]
+        });
+      },
+      ecAllInit: function(canvas, width, height) {
+        baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          color:['#37a2da', '#32c5e9'],
+          legend: {
+            data: ['心情指数','体重']
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            }
+          ],
+           yAxis: [
+              {
+                  type: 'value',
+                  name: '体重/kg',
+                  min: 0,
+                  max: 200,
+                  interval: 40,
+                  axisLabel: {
+                      formatter: '{value} '
+                  }
+              },
+              {
+                  type: 'value',
+                  name: '心情',
+                  min: 0,
+                  max: 100,
+                  interval: 20,
+                  axisLabel: {
+                      formatter: '{value}'
+                  }
+              }
+          ],
+          series: [
+              {
+                  name: '体重',
+                  type: 'bar',
+                  data: [120, 200, 150, 80, 70, 110, 130, 66, 68, 55, 80, 60]
+              },
+              {
+                  name: '心情',
+                  type: 'line',
+                  // smooth: true,
+                  yAxisIndex: 1,
+                  data: [20, 20, 15, 80, 70, 10, 30, 66, 68, 55, 80, 60]
+              }
+          ]
+        });
+      },
+      moods:{
+        20: '生气，',
+        40: '伤心，',
+        60: '平静，',
+        80: '开心，',
+        100: '兴奋',
       }
     }
   },
   components: {
     mpvueEcharts
   },
-  onShareAppMessage () {}
+  onShow () {
+    console.dir(this.getData().then(res=>{
+      console.log(res);
+      
+    }));
+    
+  },
+  mounted(){
+    
+    
+  },
+  methods:{
+    goNew:function(e){//跳转页面
+      let choose = e.mp.target.dataset.set;
+      console.log(e.mp.target);
+      
+      switch(choose){
+        case 'expression':
+          wx.navigateTo({url:"../mood/main"});
+          break;
+        case 'medical':
+        case 'weight':
+          wx.navigateTo({url:"../record/main"});
+          break;
+        case 'hospital':
+          // wx.navigateTo({url:"../address/main"});
+          this.address();
+          
+          break;
+      }
+    },
+    address:function(e){//跳转地图
+      let plugin = requirePlugin('routePlan');
+
+      let key = 'VFKBZ-HQWKD-QTA4G-PZ7TG-O66PS-7EBLY';  //使用在腾讯位置服务申请的key
+      let referer = '化忧小栈';   //调用插件的小程序的名称
+      let endPoint = JSON.stringify({  //终点
+        'name': '广东省中医院',
+        'latitude': 23.124852,
+        'longitude': 113.258812
+      });
+      wx.navigateTo({
+        url: 'plugin://routePlan/route-plan?key=' + key + '&referer=' + referer + '&endPoint=' + endPoint
+      });
+    },
+    getData:async function(e){
+      let weight = await ($http.myAxios({
+        url:'/jieyou/api/weight/mine/all',
+        data:{
+          'timeInterval': {
+            month:'month',
+            year:'year',
+          }
+        }
+      }));
+      let mood = await ($http.myAxios({
+        url:'/jieyou/api/moodRecord/mine/all',
+        data:{
+          'timeInterval': {
+            month:'month',
+            year:'year',
+          }
+        }
+      }));
+
+      return [weight, mood];
+    },
+    goTest(e){
+      // console.log(e);
+      let id = e.currentTarget.dataset.id;
+      if(parseInt(id)===0){
+        wx.navigateTo({url:"../test_detail/main"});
+        return;
+      }
+      wx.navigateTo({url:"../warmTest_detail/main"});
+    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
+
 $bg:#f0f0f0;
 .mainBox {
     background: $bg;
@@ -318,6 +321,7 @@ $bg:#f0f0f0;
   position: relative;
   color: rgb(151, 151, 151);
 
+<<<<<<< HEAD
   &-text {
     width: 28%;
     text-align: center;
@@ -328,6 +332,13 @@ $bg:#f0f0f0;
     right: 0;
     bottom: 0;
     margin: auto;
+=======
+  .medical .comment-pic{
+    background: linear-gradient(45deg, rgb(191,213,252), rgb(230, 230, 230));
+  }
+  .expression .comment-pic,.hospital .comment-pic{
+    background: linear-gradient(45deg, rgb(156,222,255), rgb(230, 230, 230));
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
   }
 
   &::before {
@@ -367,12 +378,28 @@ $bg:#f0f0f0;
       border-radius: 25 rpx;
       overflow: hidden;
       position: relative;
+<<<<<<< HEAD
 
       img {
         width: .6rem;
         height: 0.6rem;
         position: absolute;
         top: 10%;
+=======
+      height: 1rem;
+      width: 1rem;
+      line-height: 1rem;
+      border-radius: 50%;
+      z-index: 100;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      img{
+        height: 50%;
+        width: 50%;
+        position: absolute;
+        z-index: 99;
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
         left: 50%;
         transform: translateX(-50%);
       }
@@ -409,6 +436,7 @@ $bg:#f0f0f0;
       }
     }
 
+<<<<<<< HEAD
     .doctor {
       background: linear-gradient(45deg, rgb(96, 160, 250), rgb(230, 230, 230));
     }
@@ -439,6 +467,15 @@ $bg:#f0f0f0;
       height: 1.9rem;
       line-height: 1.9rem;
       display: flex;
+=======
+    .expression, .medical, .hospital,.weight{
+      height: 1.6rem;
+      text-align: center;
+      flex: 2;
+      display: flex;    
+      flex-direction: column;
+      justify-content:space-around;
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
       overflow: hidden;
 
       .comment-pic {
@@ -488,6 +525,7 @@ $bg:#f0f0f0;
     }
   }
 
+<<<<<<< HEAD
   .emotionBox {
     min-height: 5rem;
 
@@ -498,6 +536,23 @@ $bg:#f0f0f0;
       &.twos {
         height: 8rem;
       }
+=======
+.emotionBox{
+  min-height: 5rem;
+  .details{
+    font-size: .3rem;
+    background: #fff;
+    text-align: center;
+    height: 1rem;
+    line-height: 1rem;
+    color: #BEBEBE;
+  }
+  .mp-echarts {
+    width: 100%;
+    height: 5rem;
+    &.twos{
+      height: 8rem;
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
     }
   }
 }

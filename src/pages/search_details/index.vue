@@ -2,15 +2,9 @@
   <div class="mainBox">
     <div class="articleBox">
       <div class="article-persons-content">
-        <div class="article-persons-content-title">C/C++语言学习交流qun，从基础到项目实战，全方面系统分享 </div>
-        <span class="iconfont iconlook number">555</span>
-        <div class="details">目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-        目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-        学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-        加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。目前信息化产业发展势头很好，互联网就成为了很多普通人想要涉及的行业，因为相比于传统行业，互联网行业涨薪幅度大，机会也多，所以就会大批的人想要转行来学习c++开发。
-        目前来讲市场上需要的c++人员非常多，而且按照现在的势头，以后会需要更多的c++开发人员，理由是以后每个人公司都会有自己的网站，有自己的开发部，对于用户体验看的非常重要。所以c++程序员就会很吃香。
-        学习c++语言，除了要学习语法，还要学习内存、字符编码、调试技巧以及编程思维，这些知识点本教程都做了详细讲解。
-        加入我的C/C++语言学习交流qq裙：110355025，免费领取，整理了一套最新的C语言基础教程。这套「c语言入门教程将多年的编程经验灌输其中，典型的实践派。既适合初学者入门（学习语法），也适合程序员进阶（学习底层）。
+        <div class="article-persons-content-title">{{dataDetails.question}} </div>
+        <span class="iconfont iconlook number">{{dataDetails.helpfulCount}}</span>
+        <div class="details" v-html="dataDetails.answer">{{dataDetails.answer}}
         </div>
       </div>
     </div>
@@ -18,11 +12,24 @@
 </template>
 
 <script>
+import $http from '../../../static/plugins/ajax';
 
 export default {
+  data:{
+    dataDetails:null,
+  },
   onLoad(e){
     let id = e.id;
-    console.log(e);
+    $http.myAxios({
+      url:'/jieyou/api/faq/help/' + id,
+      
+    }).then(res=>{
+      console.log(res);
+      this.dataDetails = res.object;
+    }).catch(err=>{
+      console.log(err);
+      
+    })
   }
 }
 </script>
@@ -102,7 +109,7 @@ $padding: .2rem;
         }
         .details{
           font-size: .3rem;
-          margin-top: .2rem;
+          margin: .2rem auto;
           color: rgb(117,122,125);
         }
         

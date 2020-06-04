@@ -1,5 +1,16 @@
 {
     "pages": [
+<<<<<<< HEAD
+=======
+        "pages/index/main",
+        "pages/menu/main",
+        "pages/mood/main",
+        "pages/search/main",
+        "pages/content/main",
+        "pages/record/main",
+        "pages/comments_detail/main",
+        "pages/search_details/main",
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
         "pages/center/main",
         "pages/login/main",
         "pages/replyLetter/main",
@@ -11,6 +22,7 @@
         "pages/comments_detail/main",
         "pages/mailbox_detail/main",
         "pages/system_detail/main",
+<<<<<<< HEAD
         "pages/profile_detail/main",
         "pages/modifyNickname/main",
         "pages/mailbox/main",
@@ -21,6 +33,9 @@
         "pages/search/main",
         "pages/index/main",
         "pages/counter/main"
+=======
+        "pages/drawLetter_detail/main"
+>>>>>>> 3ea9276c44cd9c3a26700c89f2ef9b42bb24b68d
     ],
     "window": {
         "backgroundTextStyle": "dark",
@@ -51,5 +66,16 @@
             "selectedIconPath": "static/tabs/center-active.png"
         }],
         "position": "bottom"
+    },
+    "plugins": {
+        "routePlan": {
+            "version": "1.0.5",
+            "provider": "wx50b5593e81dd937a"
+        }
+    },
+    "permission": {
+        "scope.userLocation": {
+            "desc": "你的位置将用于定位"
+        }
     }
 }
