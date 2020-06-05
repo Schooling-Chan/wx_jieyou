@@ -5,14 +5,14 @@
           <img class='img' src="../../../static/images/youchuo.jpg" alt="">
           <div class="body">
             <p class="nickname">忘忧草</p>
-            <p class="time_role">04-13&nbsp&nbsp暖心师</p>
+            <p class="time_role">04-13 &nbsp;&nbsp;暖心师</p>
             <p class="content">心念感恩，铭记心中</p>
             <div class="content_link">我是链接</div>
           </div>
         </div>
         <div class="left">
           <span>点赞数</span>
-          <span class="like"><img class="like" src="../../../static/images/love1.png" alt=""></span>
+<!--          <span class="like"><img class="like" src="../../../static/images/love1.png" alt=""></span>-->
         </div>
       </div>
     </div>
@@ -20,7 +20,13 @@
 
 <script>
     export default {
+      onLoad(){
+          wx.setNavigationBarTitle({
+              title: '我的评论'
+          })
+      }
     }
+    
 </script>
 
 <style scoped lang="scss">

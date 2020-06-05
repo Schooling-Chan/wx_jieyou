@@ -99,7 +99,7 @@ export default {
           },
           header:{
             'Content-Type': 'application/x-www-form-urlencoded',
-            "token": "a4a3e938-59e0-39e0-ad6f-601f29c2e2d9"
+            "token": wx.getStorageSync('token')
           }                    
         }),$http.myAxios({
           url:'/jieyou/api/medicineRecord',

@@ -20,6 +20,11 @@
                 nickname:'',
             }
         },
+        onLoad(){
+            wx.setNavigationBarTitle({
+                title: '修改昵称'
+            })
+        },
         beforeMount(){
             this.nickname=this.userinfo.nickname
         },
@@ -36,7 +41,6 @@
                         'Content-Type': 'application/json'
                     }
                     const res = await put('/jieyou/api/user/nickname',params,header)
-                    console.log('从后端返回的执行正确的信息是：', res)
                     if(res.data.success){
                         let userinfo=wx.getStorageSync('userinfo')
                         userinfo.nickname=that.nickname

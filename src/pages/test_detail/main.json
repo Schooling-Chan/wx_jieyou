@@ -1,5 +1,5 @@
 {
-
+    "navigationBarTitleText": "心里测评",
     "usingComponents": {
         "van-button": "../../static/vant-weapp/lib/button/index"
     }

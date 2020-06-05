@@ -1,5 +1,5 @@
 
-const host = 'http://182183.xyz:9000'
+const host = 'http://49.232.153.206:9000'
 
 const config = {
   host,

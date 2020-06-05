@@ -20,6 +20,9 @@ export default {
   },
   onLoad(e){
     let id = e.id;
+    wx.setNavigationBarTitle({
+        title: '化忧百科'
+    })
     $http.myAxios({
       url:'/jieyou/api/faq/help/' + id,
       

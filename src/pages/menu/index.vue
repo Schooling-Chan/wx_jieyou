@@ -155,6 +155,9 @@ export default {
   },
   onLoad:function(){
     let that = this;
+    wx.setNavigationBarTitle({
+        title: '发现'
+    })
     wx.getSystemInfo({
       success: function(res) {
         that.wHeight = res.windowHeight;

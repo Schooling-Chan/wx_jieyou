@@ -19,8 +19,6 @@
                 </div>
                 <div class="left">
                   <img src="../../../static/images/youchuo.jpg" alt="">
-<!--                  <img v-if="replyDraft[item].isRead" class="yidu" src="../../../static/images/yidu.png" alt="">-->
-<!--                  <img v-if="!replyDraft[item].isRead" class="yidu" src="../../../static/images/weidu.png" alt="">-->
                 </div>
               </div>
               <div class="cover">
@@ -37,7 +35,6 @@
                 <span></span>
                 <img v-if="sendLetterDraft[item].toUser" :src="sendLetterDraft[item].toUser.avatarUrl" alt="">
                 <span v-if="sendLetterDraft[item].toUser">{{sendLetterDraft[item].toUser.nickname}}</span>
-                <!--                <img  class="small" :src="sendLetter[item]" alt="">-->
               </div>
             </div>
             <div class="receiving_img">
@@ -49,8 +46,6 @@
                 </div>
                 <div class="left">
                   <img src="../../../static/images/youchuo.jpg" alt="">
-<!--                  <img v-if="sendLetterDraft[item].isRead" class="yidu" src="../../../static/images/yidu.png" alt="">-->
-<!--                  <img v-if="!sendLetterDraft[item].isRead" class="yidu" src="../../../static/images/weidu.png" alt="">-->
                 </div>
               </div>
               <div class="cover">
@@ -65,7 +60,6 @@
 </template>
 
 <script>
-    import {get} from '@/util'
     import {mapState} from 'vuex'
     export default {
         data(){
@@ -106,7 +100,6 @@
       border-bottom: 0.5px solid #f5f5f5;
       height:5.8rem;
       .receiving_box{
-        /*border:1px solid pink;*/
         font-size:.26rem;
         margin-top:0.2rem;
         margin-left: 0.2rem;

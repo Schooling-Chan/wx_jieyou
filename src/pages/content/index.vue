@@ -91,7 +91,7 @@ export default {
           url:'/jieyou/api/like/liveMessage/'+ this.liveMessageId,
           header : {
               'content-type': 'application/x-www-form-urlencoded',
-              "token": "3fa8944e-6bc4-354e-b250-65fb40e5fcc1"
+              "token": wx.getStorageSync('token')
           },
           method:'delete'
         }).then(res=>{
@@ -107,7 +107,7 @@ export default {
           url:'/jieyou/api/like/liveMessage/'+ this.liveMessageId,
           header : {
               'content-type': 'application/x-www-form-urlencoded',
-              "token": "3fa8944e-6bc4-354e-b250-65fb40e5fcc1"
+              "token": wx.getStorageSync('token')
           },
           method:'post'
         }).then(res=>{

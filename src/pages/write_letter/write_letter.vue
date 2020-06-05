@@ -155,7 +155,6 @@
                     'Content-Type': 'application/json'
                 }
                 const res = await post('/jieyou/api/letter',params, header)
-                console.log('letter从后端返回的执行正确的信息是：', res)
                 that.success=res.data.success
                 console.log('letter从后端返回的执行正确的信息是：', that.success)
             },
@@ -174,7 +173,6 @@
                 const res = await post('/jieyou/api/letter/draft',params, header)
                 console.log('letter从后端返回的执行正确的信息是：', res)
                 that.success=res.data.success
-                console.log('letter从后端返回的执行正确的信息是：', that.success)
             },
             isSubmitDraft(){//判断能否寄出
                 if(this.word_count&&this.tag){
@@ -213,7 +211,6 @@
                     const url='/jieyou/api/letter/'+that.indexId
                     const res = await get(url,'',header)
                     that.send_draft=res.data.object
-                    console.log( '222s',that.send_draft)
                     that.tags=that.send_draft.tags
                     this.divisionStr='';
                     that.tags.forEach(item => {

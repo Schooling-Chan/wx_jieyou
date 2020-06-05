@@ -98,8 +98,6 @@
                         const tempFilePaths = res.tempFilePaths
                         that.addimage=tempFilePaths
                         that.imgaeSrc=res.tempFilePaths[0]
-                        console.log(tempFilePaths,'(tempFilePaths')
-                        console.log( that.imgaeSrc,'(that.imgaeSrc')
                         //选择图片成功回调
                         wx.showLoading({
                             title: '上传中',
@@ -138,7 +136,6 @@
                 let that = this
                 let reg=new RegExp("/");
                 let file_Path=that.filePath.replace(reg,"");
-               // const file_Path =that.filePath.split("/").join("");
                 console.log('file_Path',file_Path)
                 wx.uploadFile
                 ({
@@ -184,7 +181,6 @@
                     }
                     console.log('avatarUrl', params)
                     const res = await put('/jieyou/api/user/avatar',params,header)
-                    console.log('从后端返回的执行正确的信息是：', res)
                     if(res.data.success){
                         let userinfo=wx.getStorageSync('userinfo')
                         userinfo.avatarUrl='https://jieyouxiaozhan.oss-cn-shenzhen.aliyuncs.com'+that.filePath
@@ -211,7 +207,6 @@
                         'Content-Type': 'application/json'
                     }
                     const res = await put(url,'',header)
-                    console.log('从后端返回的执行正确的信息是：', res)
                     if(res.data.success){
                         let userinfo=wx.getStorageSync('userinfo')
                         userinfo.gender=that.gender
@@ -250,7 +245,6 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                     const res = await del('/jieyou/api/logout', params,header)
-                    console.log('从后端返回的执行正确的信息是：', res)
                     if(res.data.success){
                         wx.setStorageSync('token', '')
                         wx.setStorageSync('userinfo', '')

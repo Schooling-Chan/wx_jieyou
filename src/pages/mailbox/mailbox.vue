@@ -37,7 +37,6 @@
                 <span></span>
                 <img v-if="sendLetter[item].toUser" :src="sendLetter[item].toUser.avatarUrl" alt="">
                 &nbsp&nbsp <span v-if="sendLetter[item].toUser">{{sendLetter[item].toUser.nickname}}</span>
-<!--                <img  class="small" :src="sendLetter[item]" alt="">-->
               </div>
             </div>
             <div class="receiving_img">
@@ -113,7 +112,6 @@
       border-bottom: 0.5px solid #f5f5f5;
       height:5.8rem;
       .receiving_box{
-        /*border:1px solid pink;*/
         font-size:.26rem;
         margin-top:0.2rem;
         margin-left: 0.2rem;

@@ -1,4 +1,3 @@
-
 <template>
 <div
 class="modal_mask"

@@ -52,8 +52,8 @@
           <img class="img"  src="../../../static/images/system_detail02.png">
           <span class="name">
             <lable class="info">评论通知
-              <lable class="greencircle" v-if="!commentCount"></lable>
-              <lable class="redcircle" v-if="commentCount"></lable>
+              <lable class="greencircle" v-if="commentCount"></lable>
+              <lable class="redcircle" v-if="!commentCount"></lable>
             </lable>
             <div class="content">{{sendLetter[item].fromUser}}评论了你</div>
             <div class="content1">{{comment[item].content}}</div>
@@ -82,14 +82,16 @@
         computed: {
             ...mapState(['sendLetter','comment','receiveLetter'])
         },
+        onLoad(){
+            wx.setNavigationBarTitle({
+                title: '系统消息'
+            })
+        },
         beforeMount(){
             this.getSystemCount()
             this.getUnReadCount()
             this.getCommentCount()
             this.getSystemAnnotation()
-           // console.log('sendLetter',this.sendLetter)
-            //console.log('comment',this.comment)
-            //console.log('receiveLetter',this.receiveLetter)
         },
         methods:{
             toMailboxDetail_Send(item){
@@ -153,7 +155,6 @@
                     const res = await get('/jieyou/api/annotation/system')
                     let that = this
                     that.systemAnnotation = res.data.object
-                    //console.log(that.systemAnnotation)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
@@ -163,6 +164,7 @@
 </script>
 
 <style scoped lang="scss">
+  @import "../../../static/fonts/invitation/font.css";
 .system_detail{
   margin-top: 5px;
   background-color:#f5f5f5;

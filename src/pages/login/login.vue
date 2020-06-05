@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="up">
-      <img src="../../../static/images/youchuo.jpg"></img>
+      <img src="../../../static/images/youchuo.jpg"/>
       <p>为你解忧</p>
       <div class="line"></div>
     </div>
@@ -28,6 +28,11 @@
                 gender:'',
                 code:'',
             }
+        },
+        onLoad(){
+            wx.setNavigationBarTitle({
+                title: '微信登陆'
+            })
         },
         methods: {
             bindGetUserInfo () {
@@ -80,11 +85,10 @@
                 }
                 console.log(params)
                 const res = await post('/jieyou/api/login', params,header)
-                console.log(444, res)
+                console.log("loginres",res)
                 if (res.header.token) {
                     wx.setStorageSync('token', res.header.token)
                     wx.setStorageSync('userinfo', res.data.object)
-                    //当拿到数据时，通过actions分发
                     wx.reLaunch({
                         url: '/pages/index/main'
                     })

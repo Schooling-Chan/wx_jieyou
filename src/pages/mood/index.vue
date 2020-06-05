@@ -38,6 +38,9 @@ export default {
   onLoad(e){
     let id = e.id;
     console.log(e);
+    wx.setNavigationBarTitle({
+        title: '心情打卡'
+    })
   },
   
   data(){
@@ -226,7 +229,7 @@ export default {
                     name:  'file',
                     header: {
                       "Content-Type": "multipart/form-data",
-                      "token": '3fa8944e-6bc4-354e-b250-65fb40e5fcc1'
+                      "token": wx.getStorageSync('token')
                     },
                     formData: {
                       'name': that.imagesName[index],

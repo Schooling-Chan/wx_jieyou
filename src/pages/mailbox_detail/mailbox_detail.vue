@@ -22,7 +22,8 @@
       <div class="receiving_img" v-if="!id">
         <div class="content_font">
           <div class="right">
-            <p class="small" v-if="receiveLetter_detail.toUser" @tap="toReplyLetter(indexId,receiveLetter_detail.toUser.nickname)" >回信 <img class='small_img' src="../../../static/images/love.png" alt=""></p>
+            <p class="small" v-if="receiveLetter_detail.toUser" @tap="toReplyLetter(indexId,receiveLetter_detail.toUser.nickname)" ><i class="iconfont iconxihuan-dian"></i>回信
+            </p>
             <p class="mail_name" v-if="receiveLetter_detail.fromUser">From:{{receiveLetter_detail.fromUser.nickname}}</p>
             <p class="mail_time">{{receiveLetter_detail.gmtCreate}}</p>
             <p class="mail_content">
@@ -54,6 +55,11 @@
                 indexId:'',
             }
         },
+        onLoad(){
+            wx.setNavigationBarTitle({
+                title: '信箱详情'
+            })
+        },
         computed: {
             ...mapState(['sendLetter','receiveLetter'])
         },
@@ -76,7 +82,6 @@
                     const url='/jieyou/api/letter/'+that.id
                     const res = await get(url,'',header)
                     that.sendLetter_detail=res.data.object
-                    console.log( '222s',that.sendLetter_detail)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
@@ -93,7 +98,6 @@
                     const url='/jieyou/api/letter/'+that.indexId
                     const res = await get(url,'',header)
                     that.receiveLetter_detail=res.data.object
-                    console.log( '222s',that.receiveLetter_detail)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
@@ -111,7 +115,8 @@
 </script>
 
 <style scoped lang="scss">
-.mailbox_detailContainer{
+  @import "../../../static/fonts/invitation/font.css";
+  .mailbox_detailContainer{
   display:flex;
   flex-direction:column;
   background-color: #f0faff;
@@ -121,7 +126,6 @@
     margin-top:.05rem;
     height:1rem;
     width:100%;
-    /*border:1px solid darkslategray;*/
     position:relative;
     background:conic-gradient(transparent 23%,#fde5ca 0,#fde5ca 77%,transparent 0);
   }//底部
@@ -150,19 +154,12 @@
     height:auto;
     background:#fff;
     border-top:10px solid #eee;
-    /*border-right:10px solid #eee;*/
-    /*border-left:10px solid #eee;*/
     box-shadow: 0 0 10px rgba(0,0,0,0.10);
     margin:0 auto;
     margin-bottom:-60px;
     border-image:repeating-linear-gradient(-45deg,transparent 0,transparent 0.5rem,#ffc9c7 0,#ffc9c7 1rem,#dcedff 0,transparent 0,transparent 1.5rem,#dcedff 0,#dcedff 2rem) 20;
     .right{
-      /*float:left;*/
       .small{
-        /*float:right;*/
-        /*height:0.4rem;*/
-        /*width:0.4rem;*/
-        /*vertical-align:middle;*/
         margin-left:60%;
         color:#D34D3C;
         font-size:16px;

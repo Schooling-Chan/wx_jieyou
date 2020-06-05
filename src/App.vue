@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style>
-.container {
+  .container {
   height: 100%;
   display: flex;
   flex-direction: column;

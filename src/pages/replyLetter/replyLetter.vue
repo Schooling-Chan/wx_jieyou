@@ -48,6 +48,11 @@
                 name:'',
             }
         },
+        onLoad(){
+            wx.setNavigationBarTitle({
+                title: '回信'
+            })
+        },
         computed: {
             ...mapState(['receiveLetter','replyDraft'])
         },
@@ -78,7 +83,6 @@
                         'Content-Type': 'application/json'
                     }
                     const res = await put('/jieyou/api/letter',params, header)
-                    console.log('从后端返回的执行正确的信息是：', res)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
@@ -95,7 +99,6 @@
                         'Content-Type': 'application/json'
                     }
                     const res = await put('/jieyou/api/letter/draft',params, header)
-                    console.log('从后端返回的执行正确的信息是：', res)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
@@ -104,9 +107,6 @@
                 if(this.word_count){
                     this.reyplyLetter()
                     showSuccess('发送成功')
-                    // wx.navigateTo({
-                    //     url:'/pages/mailbox/main'
-                    // })
                     this.content=''
                     this.name=''
                 }else{
@@ -117,9 +117,6 @@
                 if(this.word_count){
                     this.reyplyLetterDraft()
                     showSuccess('已存为草稿')
-                    // wx.navigateTo({
-                    //     url:'/pages/mailbox/main'
-                    // })
                     this.content=''
                     this.name=''
                 }else{
@@ -154,7 +151,6 @@
       margin-top:.05rem;
       height:1rem;
       width:100%;
-      /*border:1px solid darkslategray;*/
       position:relative;
       background:conic-gradient(transparent 23%,#fde5ca 0,#fde5ca 77%,transparent 0);
     }//底部

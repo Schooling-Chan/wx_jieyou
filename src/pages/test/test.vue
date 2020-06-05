@@ -59,7 +59,6 @@
                     }
                     const res = await get('/jieyou/api/exam/sds','',header)
                     this.examSds=res.data.object
-                    console.log( 'this.examSds',this.examSds)
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
                 }
@@ -73,7 +72,6 @@
             },
             ifNext(){
                 //判断能否下一个
-               // console.log(this.radio_index[this.index_id])
                 if(this.radio_answers[this.index_id]){
                     this.next();
                 }else{

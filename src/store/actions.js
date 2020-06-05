@@ -1,10 +1,6 @@
-import {RECEIVE_USER_INFO,RECEIVE_SENDLETTER,RECEIVE_COMMENT,RECEIVE_RECEIVELETTER,RECEIVE_REPLYDRAFT,RECEIVE_SENDDRAFT} from './mutation-type'
+import {RECEIVE_SENDLETTER,RECEIVE_COMMENT,RECEIVE_RECEIVELETTER,RECEIVE_REPLYDRAFT,RECEIVE_SENDDRAFT} from './mutation-type'
 
 export default {
-  getUserInfo({commit},data){
-    // 触发对应的mutation
-    commit(RECEIVE_USER_INFO, data)
-  },
   getSendLetter({commit},data){
     // 触发对应的mutation
     commit(RECEIVE_SENDLETTER, data)

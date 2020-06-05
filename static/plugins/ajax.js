@@ -7,7 +7,7 @@ module.exports.myAxios = function(arg) {
             data = {},
             header = {
                 'content-type': 'application/json', // 默认值
-                "token": "3fa8944e-6bc4-354e-b250-65fb40e5fcc1"
+                "token": wx.getStorageSync('token')
             },
             method = 'get',
             dataType = 'json'

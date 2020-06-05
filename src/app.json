@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/pre_login/main",
         "pages/login/main",
         "pages/center/main",
         "pages/replyLetter/main",
@@ -19,7 +20,8 @@
         "pages/search_details/main",
         "pages/content/main",
         "pages/search/main",
-        "pages/index/main"
+        "pages/index/main",
+        "pages/mood/main"
     ],
     "window": {
         "backgroundTextStyle": "dark",

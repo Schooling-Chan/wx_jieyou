@@ -1,4 +1,5 @@
 {
+   "navigationBarTitleText": "心里测评",
     "usingComponents": {
         "van-radio": "../../static/vant-weapp/lib/radio/index",
         "van-radio-group": "../../static/vant-weapp/lib/radio-group/index",
