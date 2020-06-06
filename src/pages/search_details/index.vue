@@ -3,7 +3,7 @@
     <div class="articleBox">
       <div class="article-persons-content">
         <div class="article-persons-content-title">{{dataDetails.question}} </div>
-        <span class="iconfont iconlook number">{{dataDetails.helpfulCount}}</span>
+        <span class="iconfont iconlook1 number">{{dataDetails.helpfulCount}}</span>
         <div class="details" v-html="dataDetails.answer">{{dataDetails.answer}}
         </div>
       </div>

@@ -1,4 +1,4 @@
-let baseURL = 'http://182183.xyz:9000';
+let baseURL = 'http://49.232.153.206:9000';
 
 module.exports.myAxios = function(arg) {
 

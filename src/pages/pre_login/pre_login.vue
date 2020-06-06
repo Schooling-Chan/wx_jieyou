@@ -11,31 +11,31 @@
 
 <script>
     export default {
-      onLoad(){
-          wx.setNavigationBarTitle({
-              title: '微信登陆'
-          })
-      },
-      methods: {
-          weChatClick () {
-              let that = this;
-              wx.checkSession({
-                  success: function(res){
-                      //session 未过期，并且在本生命周期一直有效
-                     wx.switchTab({
-                          url:'/pages/index/main'
-                      })
-                  },
-                  fail: function(res){
-                      wx.redirectTo({
-                          url: '/pages/login/main'
-                      })
-                      //登录态过期
-                  }
-              })
-          },
-      },
-  }
+        onLoad(){
+            wx.setNavigationBarTitle({
+                title: '微信登陆'
+            })
+        },
+        methods: {
+            weChatClick () {
+                let that = this;
+                wx.checkSession({
+                    success: function(res){
+                        //session 未过期，并且在本生命周期一直有效
+                        wx.switchTab({
+                            url:'/pages/index/main?to_index=1',
+                        })
+                    },
+                    fail: function(res){
+                        wx.redirectTo({
+                            url: '/pages/login/main'
+                        })
+                        //登录态过期
+                    }
+                })
+            },
+        },
+    }
 
 </script>
 

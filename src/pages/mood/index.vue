@@ -220,9 +220,11 @@ export default {
                 console.log(err);
               });
               break;
-            default:
+            default: 
+             
               
               that.imagesLabel.forEach(async (item,index)=>{
+                 console.log(item.filePath);
                 await mpvue.uploadFile({
                     url: 'https://jieyouxiaozhan.oss-cn-shenzhen.aliyuncs.com',
                     filePath: that.images[index],
@@ -264,7 +266,8 @@ export default {
                 url: '/jieyou/api/liveMessage',
                 method: 'post',
                 data:{
-                  'content':arg[0]
+                  'content':arg[0],
+                  'pictureUrls': that.imagesLabel.map(item => 'https://jieyouxiaozhan.oss-cn-shenzhen.aliyuncs.com' + item.filePath)
                 }
               }).then(res =>{
                 mpvue.showToast({

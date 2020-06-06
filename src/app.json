@@ -6,7 +6,6 @@
         "pages/replyLetter/main",
         "pages/warmTest_detail/main",
         "pages/warmTest/main",
-        "pages/test_detail/main",
         "pages/test/main",
         "pages/write_letter/main",
         "pages/comments_detail/main",

@@ -9,7 +9,7 @@
       <div class="cardList" @click="godetails" v-for="(item, index) in dataList" :key="index" :data-id="item.id" >
         <div class="title">{{item.question}}</div>
         <div class="content" ><span v-html="item.answer">{{item.answer}}</span></div>
-        <div class="iconfont1 iconlook number">{{item.helpfulCount}}</div>
+        <div class="iconfont1 iconlook1 number">{{item.helpfulCount}}</div>
       </div>
     </div>
     <div class="cardBox" v-if="dataId === 1">

@@ -84,6 +84,7 @@
                 this.getSendDraft()
             }
             if(this.$mp.query.id){
+              this.nxs_id = this.$mp.query.id;
                 this.getWarmerUser()
             }
         },

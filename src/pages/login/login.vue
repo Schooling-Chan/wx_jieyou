@@ -89,6 +89,7 @@
                 if (res.header.token) {
                     wx.setStorageSync('token', res.header.token)
                     wx.setStorageSync('userinfo', res.data.object)
+                    
                     wx.reLaunch({
                         url: '/pages/index/main'
                     })

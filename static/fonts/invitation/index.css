@@ -4,9 +4,7 @@
     src: url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.eot');
     src: url('//at.alicdn.com/t/font_1864650_3ll6oyitptp.css');
     src: url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.woff2') format('woff2'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.woff') format('woff'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.ttf') format('truetype'), url('//at.alicdn.com/t/font_1764620_yw6yn5y7e3.svg#iconfont') format('svg')
-
 }
-
 
 .iconfont {
     font-family: "iconfont" !important;
@@ -112,11 +110,17 @@
     content: "\e61c";
     font-size: 55rpx;
     position: absolute;
-    height: 55rpx;
-    line-height: 55rpx;
-    width: 55rpx;
-    transform: translateX(-108%);
+    transform: translate(-105%, -10%);
     color: #69C8BB;
+}
+
+.iconlook1::before {
+    content: "\e61c";
+    font-size: 55rpx;
+    position: absolute;
+    transform: translate(-105%, -10%);
+    color: #69C8BB;
+    top: 9%;
 }
 
 

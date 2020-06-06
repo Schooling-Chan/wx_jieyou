@@ -22,7 +22,7 @@
     <!-- 文章 -->
     <div class="commentBox">
       <div class="title iconComments iconfont1" @click="showComments">评论({{commentsCount}})</div>
-      <div :class="'commentList '+ comments">
+      <div :class="'commentList '+ {'show':check}">
           <div class="comments" v-for="(item,index) in dataComments" :key="index" :id="item.id">
             <div class="head">
               <img :src="item.user.avatarUrl" alt="头像" class="perImg">
@@ -76,7 +76,9 @@ export default {
     replyParent:null,
     test:null,
     liked:null,//记录like值
-    likenum:null//记录like数量
+    likenum:null,//记录like数量
+    commentsNum:1,
+    defaultId:null
   },
   methods:{
     startThings(e){
@@ -112,7 +114,7 @@ export default {
           method:'post'
         }).then(res=>{
           console.log(res);
-          this.liked = true
+          this.liked = true;
           this.likenum++;
         }).catch(err=>{
           console.log(err);
@@ -135,16 +137,20 @@ export default {
     showComments(e){//显示评论
       let _this = this;
       if(this.check) {
-        this.comments = this.comments === 'show' ? 'hidden' : 'show';
+        this.check = false;
         return;
       }
       
       $http.myAxios({
-        url:'/jieyou/api/comment/liveMessage/'+ _this.liveMessageId
+        url:'/jieyou/api/comment/liveMessage/'+ _this.liveMessageId,
+        data:{
+          pageNum: _this.commentsNum,
+          pageSize: 10
+        }
       }).then(res=>{
-        return _this.dataComments = res.object.reverse();
+        return _this.dataComments = res.object;
       }).then( res=>{
-        // console.log(res);
+        console.log(res);
         res.forEach(async (item,index)=>{
           return await this.loadData(item.id);
         })
@@ -152,8 +158,7 @@ export default {
         let time = setTimeout(()=>{
           clearInterval(time);
           _this.test = _this.secondComments;
-          _this.secondComments = null;
-          this.comments = this.comments === 'show' ? 'hidden' : 'show';
+          // this.comments = this.comments === 'show' ? 'hidden' : 'show';
           this.check = true;
           // console.log(_this.test);
         },1000)
@@ -221,13 +226,42 @@ export default {
   onPullDownRefresh(e){
     this.check = false;
     this.secondComments = {};
+    this.dataComments = null;
+    this.commentsNum = 1;
     let time = setTimeout(async ()=>{
       clearInterval(time);
       await this.showComments();
       wx.hideNavigationBarLoading();
     },1000);
 
-  }
+  },
+  onReachBottom: function () {//下拉刷新
+    var _this=this;
+    if(this.dataComments.length < 10 || !this.check) return;
+    $http.myAxios({
+      url:'/jieyou/api/comment/liveMessage/'+ _this.liveMessageId,
+      data:{
+        pageNum: ++_this.commentsNum,
+        pageSize: 10
+      }
+    }).then(results=>{
+      // _this.dataList = results.object;
+      results.object.forEach(async item=>{
+        await _this.dataComments.push(item);
+        await _this.loadData(item.id);
+      })
+      console.log(_this.dataComments);
+      let time = setTimeout(()=>{
+        clearInterval(time);
+        // console.log(_this.secondComments);
+        
+         _this.test = _this.secondComments;
+        // _this.secondComments = null;
+        
+        this.check = true;
+      },1000)
+    })
+  },
 }
 </script>
 
@@ -237,7 +271,7 @@ export default {
 $padding: .2rem;
 
 .show{
-  display: block;
+  display: block!important;
 }
 
 .hidden{
@@ -358,6 +392,7 @@ $padding: .2rem;
     padding: .1rem ;
   }
   .commentList{
+    display: none;
     .comments{
       padding: $padding;
       position: relative;

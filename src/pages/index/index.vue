@@ -223,11 +223,17 @@ export default {
       console.log(res);
       
     }));
+    console.log('2'+wx.getStorageSync('token'));
+    
     
   },
   mounted(){
-    
-    
+     if(this.$mp.query.to_index){
+        console.log("wx.reLaunch")
+        wx.reLaunch({
+            url:'/pages/index/main'
+        })
+    }
   },
   methods:{
     goNew:function(e){//跳转页面
@@ -289,10 +295,10 @@ export default {
       // console.log(e);
       let id = e.currentTarget.dataset.id;
       if(parseInt(id)===0){
-        wx.navigateTo({url:"../test_detail/main"});
+        wx.navigateTo({url:"../warmTest_detail/main"});
         return;
       }
-      wx.navigateTo({url:"../warmTest_detail/main"});
+      wx.navigateTo({url:"../warmTest_detail/main?num=1"});
     }
   }
 }

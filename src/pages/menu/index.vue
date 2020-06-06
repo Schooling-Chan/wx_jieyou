@@ -34,13 +34,13 @@
     <div :class="changeClass " :style="{height:allHeight.dynamicBox +'px'}" >
       <div class="menu">
         <scroll-view scroll-with-animation  scroll-y="true"  >
-           <text @click="changeTab" :class="{'active': tabIndex == 0}" data-id="0">最新动态</text>
+           <text class="active" data-id="0">最新动态</text>
            <!-- <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">热门动态</text> -->
         </scroll-view>
       </div>
       <swiper class="swiperBox" :current="tabIndex" @change="pageChange" >
-        <swiper-item :style="'height: 100%; overflow-X:hidden; '+{width: wWidth + 'px'}">
-          <scroll-view class='scroll-view-list'   scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
+        <swiper-item>
+          <scroll-view class='scroll-view-list' scroll-y scroll-with-animation @scroll="scrollH" :throttle="false" >
             <!-- 热门帖子 -->
             <div class="invitationBox">
               <div class="title"><div class="title-text">最新动态</div></div>
@@ -50,7 +50,6 @@
                     <img :src="item.user.avatarUrl" alt="头像" class="perImg">
                     <span>{{item.user.nickname}}</span>
                     <div class="time">{{item.gmtCreate}}</div>
-                    <div class="iconfont1 iconlook number">{{item.viewCount}}</div>
                   </div>
                   <div class="invitation-persons-content">
                     <div class="details">{{item.content}}
@@ -60,6 +59,7 @@
                     <img :src="imgs" alt="" v-for="(imgs,key) in item.pictureUrls" :key="key">
                   </div>
                   <div class="footer">
+                    <div class="iconfont iconlook number">{{item.viewCount  > 99 ? '99+' : item.viewCount}}</div>
                     <div :class="'give iconfont icond '+ {'iconliked':item.isLike}" @click="isLike">{{item.likeCount > 99 ? '99+' : item.likeCount}}</div>
                     <div class="comment iconfont iconc">{{item.commentCount > 99 ? '99+' : item.commentCount}}</div>
                   </div>
@@ -181,9 +181,9 @@ export default {
       console.log(_this.dataList);
     })
   },
-  onReachBottom: function () {
-    var that=this;
-    if(this.dataList.length<10) return;
+  onReachBottom: function () {//下拉刷新
+    var _this=this;
+    if(this.dataList.length < 10) return;
     $http.myAxios({
       url:'/jieyou/api/liveMessage/latest',
       data:{
@@ -401,6 +401,9 @@ $padding: 0 .2rem;
     margin-top: 2px;
     height: 91%;
     background: #fff;
+    .scroll-view-list{
+      height: 100%;
+    }
   }
 
   &-active{
@@ -430,7 +433,6 @@ $padding: 0 .2rem;
       background: #fff;
       border-radius: .15rem;
       border: 1rpx solid rgb(231, 231, 231);
-      // box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
       box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
       &-head{
         width: 100%;
@@ -463,13 +465,7 @@ $padding: 0 .2rem;
           left: 18%;
           color: rgba($color: #000, $alpha: .5);
         }
-        .number{
-          color: #B8B8B8;
-          height: 55rpx;
-          line-height: 55rpx;
-          font-size: .28rem;
-          transform: translate(38%,90%);
-        }
+        
         .iconlook::before{
           font-size: 40rpx;
           height: 40rpx;
@@ -520,13 +516,16 @@ $padding: 0 .2rem;
         padding: 0.1rem .2rem;
         position: relative;
         font-size: .3rem;
-        .comment, .give{
+        .comment, .give, .number{
           position: absolute;
           right: 5%;
           transform: translateY(-50%);
         }
         .give{
           right: 21%;
+        }
+        .number{
+          right: 35%;
         }
       }
     }
