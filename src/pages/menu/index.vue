@@ -34,9 +34,9 @@
     <div :class="changeClass " :style="{height:allHeight.dynamicBox +'px'}" >
       <div class="menu">
         <scroll-view scroll-with-animation  scroll-y="true"  >
-           <text class="active" data-id="0">最新动态</text>
-           <!-- <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">热门动态</text> -->
-        </scroll-view>
+           <text @click="changeTab" :class="{'active': tabIndex == 0}" data-id="0">最新动态</text>
+           <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">信总览</text>
+        </scroll-view> 
       </div>
       <swiper class="swiperBox" :current="tabIndex" @change="pageChange" >
         <swiper-item>
@@ -68,15 +68,15 @@
             </div>
           </scroll-view>
         </swiper-item>
-        <!-- <swiper-item>
+        <swiper-item>
           <scroll-view style="height: 100%; width: 100%" scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
             <div class="invitationBox">
-              <div class="title"><div class="title-text">热门动态</div></div>
+              <div class="title"><div class="title-text">信总览</div></div>
               <div class="invitation">
               </div>
             </div>
           </scroll-view>
-        </swiper-item> -->
+        </swiper-item>
       </swiper>
     </div>
 
@@ -129,7 +129,7 @@ export default {
     },
     goPage(e){//进入详情页面
       let id = e.currentTarget.dataset.id;
-      wx.navigateTo({url:"../content/main?id=" + id});
+      wx.navigateTo({url:"../content/main?id=" + id + "&_=" + (+new Date())});
     },
     goLetter(e){
       let id = e.currentTarget.dataset.id;
@@ -141,16 +141,22 @@ export default {
     },
     goSearch(e){//进入搜索页面
       let id = e.currentTarget.dataset.id;
-      wx.navigateTo({url:"../search/main?id=" + id});
+      wx.navigateTo({url:"../search/main?id=" + id });
     },
     scrollH(e) {//滑动进入查看动态
-      let scrollTop = e.mp.detail.scrollTop;
+      let scrollTop = e.mp.detail.scrollTop,
+      time = null;
       if(this.temp === null){
         this.temp = this.allHeight.dynamicBox;
       }
 
+      
       scrollTop > 5 ? (this.allHeight.dynamicBox=this.wHeight,this.changeClass = 'dynamicBox dynamicBox-active') : null;//dynamicBox-active
-      scrollTop === 0 ? (this.allHeight.dynamicBox=this.temp,this.changeClass = 'dynamicBox'):null;
+      scrollTop === 0 ? (time = setTimeout(()=>{
+        clearInterval(time);
+        this.allHeight.dynamicBox=this.temp;
+        this.changeClass = 'dynamicBox';
+      }, 150)) :null;
     }
   },
   onLoad:function(){
@@ -166,10 +172,13 @@ export default {
     });
     this.getHeight({'searchBox':'.searchBox', 'writeBox':'.writeBox'});
   },
-  mounted:function(e){
+  onShow:function(e){
     this.allHeight.dynamicBox = this.wHeight - this.allHeight.searchBox - this.allHeight.writeBox;
     let _this = this;
     ///jieyou/api/liveMessage/latest
+    if(this.changeClass === 'dynamicBox dynamicBox-active'){
+      this.allHeight.dynamicBox=this.wHeight
+    }
     $http.myAxios({
       url:'/jieyou/api/liveMessage/latest',
       data:{

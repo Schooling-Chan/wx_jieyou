@@ -64,7 +64,7 @@ import $http from '../../../static/plugins/ajax';
 export default {
   data:{
     dicussShow:false,
-    commentsCount: 100,//动态总数
+    commentsCount: 0,//动态总数
     comments:'hidden',//点击显示评论
     dataContent:{},//动态详情
     liveMessageId:null,//动态id
@@ -76,7 +76,7 @@ export default {
     replyParent:null,
     test:null,
     liked:null,//记录like值
-    likenum:null,//记录like数量
+    likenum:0,//记录like数量
     commentsNum:1,
     defaultId:null
   },
@@ -99,6 +99,7 @@ export default {
         }).then(res=>{
           console.log(res);
           this.liked = false
+          if(this.likenum === 0) return
           this.likenum--;
         }).catch(err=>{
           console.log(err);
@@ -115,6 +116,10 @@ export default {
         }).then(res=>{
           console.log(res);
           this.liked = true;
+          if(this.likenum >= 100) {
+            this.likenum = '99+';
+            return;
+          }
           this.likenum++;
         }).catch(err=>{
           console.log(err);
@@ -210,6 +215,9 @@ export default {
   },
   onLoad(e){//加载数据
     this.liveMessageId = e.id;
+    this.dataContent = {};
+  },
+  onShow(){
     let _this = this;
     $http.myAxios({//获取内容
       url:'/jieyou/api/liveMessage/'+this.liveMessageId,
@@ -219,6 +227,10 @@ export default {
       _this.commentsCount = _this.dataContent.commentCount;
       _this.liked = _this.dataContent.isLike;
       _this.likenum = _this.dataContent.likeCount;
+      this.check = false;
+      this.secondComments = {};
+      this.dataComments = null;
+      this.commentsNum = 1;
     }).catch(err=>{
       console.log(err);
     })

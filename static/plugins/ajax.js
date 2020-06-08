@@ -23,6 +23,13 @@ module.exports.myAxios = function(arg) {
             method: method,
             success: function(res) {
                 wx.hideLoading();
+
+                if (res.data.errorCode === 4001) {
+                    wx.redirectTo({
+                        url: '/pages/login/main',
+                    })
+                    return;
+                }
                 resolve(res.data);
             },
         })
