@@ -34,8 +34,8 @@
     <div :class="changeClass " :style="{height:allHeight.dynamicBox +'px'}" >
       <div class="menu">
         <scroll-view scroll-with-animation  scroll-y="true"  >
-           <text @click="changeTab" :class="{'active': tabIndex == 0}" data-id="0">最新动态</text>
-           <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">信总览</text>
+           <text @click="changeTab" class='active' data-id="0">最新动态</text>
+           <!-- <text @click="changeTab" :class="{'active': tabIndex == 1}" data-id="1">信总览</text> -->
         </scroll-view> 
       </div>
       <swiper class="swiperBox" :current="tabIndex" @change="pageChange" >
@@ -69,13 +69,13 @@
           </scroll-view>
         </swiper-item>
         <swiper-item>
-          <scroll-view style="height: 100%; width: 100%" scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
+          <!-- <scroll-view style="height: 100%; width: 100%" scroll-y="true"  scroll-with-animation @scroll="scrollH" :throttle="false">
             <div class="invitationBox">
               <div class="title"><div class="title-text">信总览</div></div>
               <div class="invitation">
               </div>
             </div>
-          </scroll-view>
+          </scroll-view> -->
         </swiper-item>
       </swiper>
     </div>
