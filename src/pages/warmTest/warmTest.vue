@@ -10,7 +10,7 @@
       <div class="btn">
         <van-row>
           <van-col span="8" v-if="index_id!= 0"><van-button type="primary" size="small" @click="last2">上一题</van-button></van-col>
-          <van-col span="8" v-if="index_id!= 5"><van-button type="primary" size="small" @click="ifNext2">下一题</van-button></van-col>
+          <van-col span="8" v-if="index_id!=19"><van-button type="primary" size="small" @click="ifNext2">下一题</van-button></van-col>
           <van-col span="8" v-else><van-button type="primary" size="small" @click="ifSubmit2">提交</van-button></van-col>
         </van-row>
       </div>
@@ -78,7 +78,7 @@
             },
             ifSubmit2(){
                 this.radio2_answers.forEach((item,index)=> {
-                    this.answers2.push({answerIndex:--item,problemIndex:index});
+                    this.answers2.push({answerIndex:item,problemIndex:index});
                 })
                 this.submit2()
             },
@@ -106,7 +106,7 @@
                     }
                     wx.navigateTo({
                         //提交后若成功直接调转到分数页面
-                        url:'/pages/warmTest_detail/main?num=1'
+                        url:'/pages/test_goal/main?num=1'
                     })
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
@@ -122,10 +122,10 @@
     font-size:14px;
   }
   .question{
-    font-size:16px;
+    font-size:18px;
     line-height:35px;
     font-weight:40px;
-    width:70%;
+    width:90%;
     margin-bottom: 5px;
   }
   span{
@@ -134,14 +134,15 @@
     margin-top:-20px !important;
   }
   .examSds{
-    font-size:16px;
+    font-size:18px;
     height:100%;
     width:100%;
     border-color: #1ADEE0;
-    position:absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50%;
-    margin-left: -30%;
+    margin-left:13px;
+    /*position:absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*margin-top: -50%;*/
+    /*margin-left: -30%;*/
   }
 </style>

@@ -110,7 +110,7 @@
                     wx.setStorageSync('goal', res.data.object)
                     wx.navigateTo({
                         //提交后若成功直接调转到分数页面
-                        url:'/pages/warmTest_detail/main'
+                        url:'/pages/test_goal/main'
                     })
                 } catch (e) {
                     console.log('从后端返回的执行错误的信息是：', e)
@@ -126,10 +126,10 @@
     font-size:14px;
   }
   .question{
-    font-size:16px;
+    font-size:18px;
     line-height:35px;
     font-weight:40px;
-    width:70%;
+    width:90%;
     margin-bottom: 5px;
   }
   span{
@@ -138,15 +138,15 @@
     margin-top:-20px !important;
   }
   .examSds{
-    font-size:16px;
+    font-size:18px;
     height:100%;
     width:100%;
     border-color: #1ADEE0;
-    position:absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50%;
-    margin-left: -30%;
+    /*position:absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*margin-top: -50%;*/
+    /*margin-left: -30%;*/
   }
 </style>
 

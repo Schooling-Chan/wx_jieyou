@@ -125,93 +125,41 @@ export default {
   data () {
     return {
       echarts,
-      initChart: function(canvas, width, height){
-        baseEcharts(canvas, width, height);
-      },
-      ecBarInit: function(canvas, width, height){
-        baseEcharts(canvas, width, height, {
-          backgroundColor: '#fff',
-          tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                  type: 'cross',
-                  crossStyle: {
-                      color: '#999'
-                  }
-              }
-          },
-          color:["#7DC2E6"],
-          xAxis: {
-            type: 'category',
-            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-          },
-          yAxis: {
-            type: 'value',
-            name: '体重(kg)',
-          },
-          series: [{
-              data: [120, 180, 150, 80, 70, 110, 130],
-              type: 'bar'
-          }]
-        });
-      },
-      ecAllInit: function(canvas, width, height) {
-        baseEcharts(canvas, width, height, {
-          backgroundColor: '#fff',
-          color:['#37a2da', '#32c5e9'],
-          legend: {
-            data: ['心情指数','体重']
-          },
-          xAxis: [
-            {
-              type: 'category',
-              data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-            }
-          ],
-           yAxis: [
-              {
-                  type: 'value',
-                  name: '体重/kg',
-                  min: 0,
-                  max: 200,
-                  interval: 40,
-                  axisLabel: {
-                      formatter: '{value} '
-                  }
-              },
-              {
-                  type: 'value',
-                  name: '心情',
-                  min: 0,
-                  max: 100,
-                  interval: 20,
-                  axisLabel: {
-                      formatter: '{value}'
-                  }
-              }
-          ],
-          series: [
-              {
-                  name: '体重',
-                  type: 'bar',
-                  data: [120, 200, 150, 80, 70, 110, 130, 66, 68, 55, 80, 60]
-              },
-              {
-                  name: '心情',
-                  type: 'line',
-                  // smooth: true,
-                  yAxisIndex: 1,
-                  data: [20, 20, 15, 80, 70, 10, 30, 66, 68, 55, 80, 60]
-              }
-          ]
-        });
-      },
+      weekMood: [],
+      yearMood: [],
+      weekWeight: [],
+      yearMood: [],
+      initChart: this.initChart,
+      ecBarInit: this.ecBarInit,
+      ecAllInit: this.ecAllInit,
       moods:{
         20: '生气，',
         40: '伤心，',
         60: '平静，',
         80: '开心，',
         100: '兴奋',
+      },
+      heart : {
+        'angry':{
+          index:20,
+          num:1
+        },
+        'sad':{
+          index:40,
+          num:2
+        },
+        'calm':{
+          index:60,
+          num:3
+        },
+        'happy':{
+          index:80,
+          num:4
+        },
+        'excite':{
+          index:100,
+          num:5
+        },
       }
     }
   },
@@ -219,11 +167,49 @@ export default {
     mpvueEcharts
   },
   onShow () {
-    console.dir(this.getData().then(res=>{
+    let _this = this;
+    this.getData().then(res=>{
       console.log(res);
+      this.weekMood = res[1].object.weekRecords.map((item, index) => {
+        let result = [],
+            moodType = parseInt(item.moodType);
+
+        for (const key in _this.heart) {
+          if (_this.heart.hasOwnProperty(key)) {
+            const element = _this.heart[key].num;
+            
+            // moodType === element ? result.push(_this.heart[key].index) : null;
+            if(moodType === element){
+              
+              return _this.heart[key].index
+            }
+            
+          }
+        }
+        // return result.length > 7 ? result.slice(-7) : result;
+      });
+      this.weekMood.length > 7 ? this.weekMood = this.weekMood.splice(-7) : null;
+      this.weekWeight = res[0].object.weekRecords.map(item => item.weight);
+      this.weekWeight.length > 7 ? this.weekWeight = this.weekWeight.slice(-7) : null;
+      this.yearMood = res[1].object.yearRecords.map((item, index) => {
+        let result = [],
+            moodType = parseInt(item.moodType);
+        for (const key in _this.heart) {
+          if (_this.heart.hasOwnProperty(key)) {
+            const element = _this.heart[key].num;
+            if(moodType === element){
+              
+              return _this.heart[key].index
+            }
+          }
+        }
+        // return result.length > 12 ? result.slice(-12) : res;
+      });
+      this.yearMood.length > 12 ? this.yearMood = this.yearMood.slice(-12) : null;
+      this.yearWeight = res[0].object.yearRecords.map(item => item.weight);
+      this.yearWeight.length > 12 ? this.yearRecords = this.yearWeight.slice(-12) : null;
       
-    }));
-    console.log('2'+wx.getStorageSync('token'));
+    });
     
     
   },
@@ -290,6 +276,23 @@ export default {
       }));
 
       return [weight, mood];
+      // return Promise.all($http.myAxios({
+      //   url:'/jieyou/api/weight/mine/all',
+      //   data:{
+      //     'timeInterval': {
+      //       month:'month',
+      //       year:'year',
+      //     }
+      //   }
+      // }), $http.myAxios({
+      //   url:'/jieyou/api/moodRecord/mine/all',
+      //   data:{
+      //     'timeInterval': {
+      //       month:'month',
+      //       year:'year',
+      //     }
+      //   }
+      // }))
     },
     goTest(e){
       // console.log(e);
@@ -299,7 +302,223 @@ export default {
         return;
       }
       wx.navigateTo({url:"../warmTest_detail/main?num=1"});
-    }
+    },
+    ecBarInit(canvas, width, height){
+      let _this = this;
+      let time = setTimeout(()=>{
+        clearInterval(time);
+        if(this.weekWeight.length === 7) {
+          baseEcharts(canvas, width, height,{
+            backgroundColor: '#fff',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            color:["#7DC2E6"],
+            xAxis: {
+              type: 'category',
+              data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+              type: 'value',
+              name: '体重(kg)',
+            },
+            series: [{
+                data: this.weekWeight,
+                type: 'bar'
+            }]
+          })
+          return;
+        }
+        baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                  type: 'cross',
+                  crossStyle: {
+                      color: '#999'
+                  }
+              }
+          },
+          color:["#7DC2E6"],
+          xAxis: {
+            type: 'category',
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          },
+          yAxis: {
+            type: 'value',
+            name: '体重(kg)',
+          },
+          series: [{
+              data: [120, 180, 150, 80, 70, 110, 130],
+              type: 'bar'
+          }]
+        });
+      },1000)      
+      
+    },
+    initChart(canvas, width, height){
+      let _this = this;
+      let time = setTimeout(()=>{
+        console.log(_this.weekMood);
+        
+        clearInterval(time);
+        if(this.weekMood.length === 7){
+          baseEcharts(canvas, width, height, {
+            backgroundColor: '#fff',
+            color: ['#37A2DA'],
+
+
+            legend: {
+                type: 'plain',
+                id: 'tips',
+                show: true,
+                top: '10rpx',
+                data: ['心情指数']
+            },
+            grid: {
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+                type: 'value',
+                name: '心情指数',
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                },
+            },
+            series: [{
+                name: '心情指数',
+                type: 'line',
+                smooth: true,
+                data: _this.weekMood
+            }]
+        });
+          return
+        }
+        baseEcharts(canvas, width, height);
+      }, 1000)
+      
+    },
+    ecAllInit(canvas, width, height) {
+      let _this = this;
+      let time = setTimeout(()=>{
+        clearInterval(time);
+        if(this.yearMood.length === 12 && this.yearWeight.length === 12){
+          baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          color:['#37a2da', '#32c5e9'],
+          legend: {
+            data: ['心情指数','体重']
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            }
+          ],
+           yAxis: [
+              {
+                  type: 'value',
+                  name: '体重/kg',
+                  min: 0,
+                  max: 200,
+                  interval: 40,
+                  axisLabel: {
+                      formatter: '{value} '
+                  }
+              },
+              {
+                  type: 'value',
+                  name: '心情',
+                  min: 0,
+                  max: 100,
+                  interval: 20,
+                  axisLabel: {
+                      formatter: '{value}'
+                  }
+              }
+          ],
+          series: [
+              {
+                  name: '体重',
+                  type: 'bar',
+                  data: _this.yearWeight
+              },
+              {
+                  name: '心情',
+                  type: 'line',
+                  // smooth: true,
+                  yAxisIndex: 1,
+                  data: _this.yearMood
+              }
+          ]
+        });
+        return;
+        }
+        baseEcharts(canvas, width, height, {
+          backgroundColor: '#fff',
+          color:['#37a2da', '#32c5e9'],
+          legend: {
+            data: ['心情指数','体重']
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            }
+          ],
+           yAxis: [
+              {
+                  type: 'value',
+                  name: '体重/kg',
+                  min: 0,
+                  max: 200,
+                  interval: 40,
+                  axisLabel: {
+                      formatter: '{value} '
+                  }
+              },
+              {
+                  type: 'value',
+                  name: '心情',
+                  min: 0,
+                  max: 100,
+                  interval: 20,
+                  axisLabel: {
+                      formatter: '{value}'
+                  }
+              }
+          ],
+          series: [
+              {
+                  name: '体重',
+                  type: 'bar',
+                  data: [120, 200, 150, 80, 70, 110, 130, 66, 68, 55, 80, 60]
+              },
+              {
+                  name: '心情',
+                  type: 'line',
+                  // smooth: true,
+                  yAxisIndex: 1,
+                  data: [20, 20, 15, 80, 70, 10, 30, 66, 68, 55, 80, 60]
+              }
+          ]
+        });
+      }, 1000)
+        
+      }
   }
 }
 </script>

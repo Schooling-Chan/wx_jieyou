@@ -4,6 +4,7 @@
         "pages/login/main",
         "pages/center/main",
         "pages/replyLetter/main",
+        "pages/test_goal/main",
         "pages/warmTest_detail/main",
         "pages/warmTest/main",
         "pages/test/main",

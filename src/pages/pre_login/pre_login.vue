@@ -19,23 +19,28 @@
         methods: {
             weChatClick () {
                 let that = this;
-                // wx.switchTab({
-                //     url:'/pages/index/main?to_index=1',
-                // })
                 wx.checkSession({
                     success: function(res){
                         //session 未过期，并且在本生命周期一直有效
-                        wx.switchTab({
-                            url:'/pages/index/main?to_index=1',
-                        })
+                        if(wx.getStorageSync('token')){
+                            wx.switchTab({
+                                url:'/pages/index/main?to_index=1',
+                            })
+                        }else{
+                            wx.redirectTo({
+                                url: '/pages/login/main'
+                            })
+                        }
                     },
                     fail: function(res){
+                        wx.setStorageSync('token', '')
                         wx.redirectTo({
                             url: '/pages/login/main'
                         })
                         //登录态过期
                     }
                 })
+
             },
         },
     }

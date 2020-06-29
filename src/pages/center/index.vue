@@ -32,8 +32,8 @@
         </div>
       </div>
     </div>
-    <div class="contain row1">
-      <div class="row" @tap="toSystemDetail">
+    <div class="contain row1"  @tap="toSystemDetail">
+      <div class="row">
         <label class="left">
           <lable class="img"><i  class="iconfont  iconxitongxiaoxi1"></i></lable>
         </label>
@@ -42,7 +42,9 @@
           >
         </label>
       </div>
-      <div class="row"  @tap="toProfile">
+    </div>
+    <div class="contain"  @tap="toProfile">
+      <div class="row">
         <label class="left">
           <lable class="img"><i  class="iconfont  iconwode"></i></lable>
         </label>
@@ -52,8 +54,8 @@
         </label>
       </div>
     </div>
-    <div class="contain">
-      <div class="row"  @tap="toCommentsDetail">
+    <div class="contain"  @tap="toCommentsDetail">
+      <div class="row">
         <label class="left">
           <lable class="img"><i  class="iconfont  iconwodepinglun"></i></lable>
         </label>
